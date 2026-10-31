@@ -28,7 +28,7 @@
 
         .gothic-title {
             font-family: 'Cinzel Decorative', serif;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .code-font {
@@ -123,36 +123,36 @@
         </div>
     </div>
 
-    <!-- HEADER NAVIGATION -->
+    <!-- HEADER NAVIGATION (FIXED OVERLAPS) -->
     <header class="sticky top-0 z-40 border-b border-purple-500/30 gothic-glass">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-purple-600 flex items-center justify-center font-black text-purple-950 text-2xl shadow-xl border border-yellow-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center space-x-3.5 min-w-max">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-400 via-amber-500 to-purple-600 flex items-center justify-center font-black text-purple-950 text-xl shadow-xl border border-yellow-300 shrink-0">
                     RU
                 </div>
-                <div>
-                    <h1 class="text-xl font-extrabold tracking-tight text-yellow-200 gothic-title flex items-center gap-2">
-                        RURP Evaluation Suite V1.2
-                        <span id="role-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 code-font">STAFF</span>
-                    </h1>
-                    <p class="text-xs text-purple-300/60">Realistic Union RolePlay • Emergency Hamburg</p>
+                <div class="flex flex-col justify-center">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm sm:text-base font-extrabold tracking-tight text-yellow-200 gothic-title">RURP Evaluation Suite V1.2</span>
+                        <span id="role-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 code-font shrink-0">STAFF</span>
+                    </div>
+                    <p class="text-[11px] text-purple-300/70 font-medium">Realistic Union RolePlay • Emergency Hamburg</p>
                 </div>
             </div>
 
-            <nav class="flex items-center space-x-2 bg-purple-950/80 p-1.5 rounded-2xl border border-purple-500/30">
-                <button onclick="switchTab('eval')" id="tab-btn-eval" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-950 shadow-lg shadow-yellow-500/20 gothic-title">
+            <nav class="hidden md:flex items-center space-x-2 bg-purple-950/80 p-1.5 rounded-2xl border border-purple-500/30">
+                <button onclick="switchTab('eval')" id="tab-btn-eval" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-950 shadow-lg gothic-title">
                     <i class="fa-solid fa-crown"></i> Active Exam
                 </button>
-                <button onclick="switchTab('bank')" id="tab-btn-bank" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                <button onclick="switchTab('bank')" id="tab-btn-bank" class="px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
                     <i class="fa-solid fa-book-bookmark"></i> Question Bank
                 </button>
-                <button onclick="switchTab('history')" id="tab-btn-history" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
-                    <i class="fa-solid fa-clock-rotate-left"></i> History Vault
+                <button onclick="switchTab('history')" id="tab-btn-history" class="px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i> History
                 </button>
-                <button onclick="switchTab('admin')" id="tab-btn-admin" class="hidden px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-400 hover:text-white transition-all flex items-center gap-2 bg-purple-500/20 border border-yellow-400/40 gothic-title">
-                    <i class="fa-solid fa-user-shield"></i> Admin Panel
+                <button onclick="switchTab('admin')" id="tab-btn-admin" class="hidden px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-400 hover:text-white transition-all flex items-center gap-2 bg-purple-500/20 border border-yellow-400/40 gothic-title">
+                    <i class="fa-solid fa-user-shield"></i> Admin
                 </button>
-                <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
                     <i class="fa-solid fa-gear"></i> Settings
                 </button>
             </nav>
@@ -442,8 +442,10 @@
 
     </main>
 
-    <footer class="border-t border-purple-500/30 gothic-glass py-5 text-center text-xs text-yellow-400/60 z-10 gothic-title">
-        RURP Realistic Union RolePlay • Emergency Hamburg Evaluation Guide V1.2
+    <!-- FOOTER WITH SIGNATURE -->
+    <footer class="border-t border-purple-500/30 gothic-glass py-5 text-center text-xs text-yellow-400/60 z-10 gothic-title flex flex-col sm:flex-row items-center justify-center gap-3">
+        <span>RURP Realistic Union RolePlay • Evaluation Suite V1.2</span>
+        <span class="text-yellow-300 font-bold tracking-wider">• Made by m4x_678</span>
     </footer>
 
     <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-purple-950 border border-yellow-400/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-xs sm:text-sm font-bold pointer-events-none gothic-title">
@@ -462,9 +464,7 @@
         let users = JSON.parse(localStorage.getItem('rurp_gothic_users_db') || JSON.stringify(DEFAULT_USERS));
         let currentUser = JSON.parse(localStorage.getItem('rurp_gothic_current_session') || 'null');
 
-        // OFFICIAL RURP V1.2 QUESTIONS (Exact Questions, Split Driving & Pullover to 10 Pts each)
         const QUESTIONS = [
-            // SECTION 1: COMMAND KNOWLEDGE (10 Pts)
             { id: 1, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What is the purpose of the vehicle spawnadmin command?", purpose: "Command Check", marking: "Correct = 1.0 Pt", guide: "Spawns admin/emergency vehicles." },
             { id: 2, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "Which command would you use to remove a disruptive player from the server temporarily?", purpose: "Command Check", marking: "Correct (:kick [player] [reason]) = 1.0 Pt", guide: ":kick command." },
             { id: 3, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command allows you to permanently remove a player from the server?", purpose: "Command Check", marking: "Correct (:ban [player] [reason]) = 1.0 Pt", guide: ":ban command." },
@@ -476,7 +476,6 @@
             { id: 9, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command can you use to stop a player from moving if they are disrupting RP?", purpose: "Command Check", marking: "Correct (:freeze [player]) = 1.0 Pt", guide: ":freeze command." },
             { id: 10, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command lets regular players use admin commands without permission?", purpose: "Command Check", marking: "Trick Question: None = 1.0 Pt", guide: "No command allows unauthorized admin usage." },
 
-            // SECTION 2: KNOWLEDGE QUESTIONS (10 Pts)
             { id: 11, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is MCRP? Give its consequence and an example.", purpose: "Definition & Consequence", marking: "Full = 1 Pt", guide: "Missing Crash RP. Warning. Crashing and driving off." },
             { id: 12, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is RDM? Give its consequence and an example.", purpose: "Definition & Consequence", marking: "Full = 1 Pt", guide: "Random Death Match. Warning/Kick. Killing without RP." },
             { id: 13, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is FRP? Give its consequence and an example.", purpose: "Definition & Consequence", marking: "Full = 1 Pt", guide: "Fail Roleplay. Warning. Stacking unsupported ladders." },
@@ -488,13 +487,8 @@
             { id: 19, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "How often should you broadcast as an admin?", purpose: "Announcement Frequency", marking: "Full = 1 Pt", guide: "Every 5-10 minutes." },
             { id: 20, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "In what circumstance can you permanently ban someone?", purpose: "Zero Tolerance Rules", marking: "Full = 1 Pt (2/4 correct)", guide: "NSFW, Exploiting, Bypass Roblox Filter, Advertising." },
 
-            // SECTION 3: MEETING SCENARIO (10 Pts)
             { id: 21, sec: 3, secTitle: "Section 3 – Meeting Scenario", max: 10, text: "Host Meeting Scenario (@all broadcast, SPaG, Control & Professionalism)", purpose: "Scenario Control", marking: "SPaG = 1 Pt, Near Template = 1 Pt / Exact Template = 2 Pts, Control = 1 Pt, Professionalism = 1 Pt (Up to 10 Pts)", guide: "Trainee uses @all broadcast, maintains calm control when trainer spawns smoke/cones." },
-
-            // SECTION 4: DRIVING ASSESSMENT (10 Pts)
             { id: 22, sec: 4, secTitle: "Section 4 – Driving Assessment", max: 10, text: "Driving Skills (Perfect drive: 5 Pts, Blinkers: 1 Pt, Stopping: 2 Pts, Parking: 2 Pts)", purpose: "Driving Control", marking: "Perfect Drive = 5, Blinkers = 1, Stop = 2, Park = 2 (Total 10 Pts)", guide: "Follow road rules, signal turns, stop completely, park correctly." },
-
-            // SECTION 5: PULL OVER SCENARIO (10 Pts)
             { id: 23, sec: 5, secTitle: "Section 5 – Pull Over Scenario", max: 10, text: "Pull Over Scenario (Pulling over trainer: 5 Pts, SPaG: 1 Pt, Admin recognition: 1 Pt, Correct consequences: 3 Pts)", purpose: "Traffic Enforcement", marking: "Pull Over = 5, SPaG = 1, Admin Awareness = 1, Consequences = 3 (Total 10 Pts)", guide: "Pull over trainer for drunk driving, wrong side, speeding, parking on road; issue correct tickets/warnings." }
         ];
 
@@ -505,7 +499,6 @@
         let overallSeconds = 0;
         let overallTimerInterval = null;
 
-        // Native Audio Synthesizer
         let audioCtx = null;
         function playSfx(type) {
             try {
@@ -633,10 +626,10 @@
                 const el = document.getElementById(`tab-${t}`);
                 if (el) el.classList.add('hidden');
                 const btn = document.getElementById(`tab-btn-${t}`);
-                if (btn) btn.className = "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title";
+                if (btn) btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title";
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tabId}`).className = "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-950 shadow-lg gothic-title";
+            document.getElementById(`tab-btn-${tabId}`).className = "px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-950 shadow-lg gothic-title";
             if (tabId === 'admin') loadAdminPanel();
         }
 
@@ -818,7 +811,7 @@
                         { name: "Final Score", value: `${grandTotal.toFixed(1)} / 50 (${Math.round((grandTotal/50)*100)}%)`, inline: true },
                         { name: "Section Scores", value: `• Commands: ${secTotals[1]}/10\n• Questions: ${secTotals[2]}/10\n• Meeting: ${secTotals[3]}/10\n• Driving: ${secTotals[4]}/10\n• Pullover: ${secTotals[5]}/10`, inline: false }
                     ],
-                    footer: { text: "RURP Realistic Union RolePlay • Evaluation Suite V1.2" }
+                    footer: { text: "RURP Realistic Union RolePlay • Evaluation Suite V1.2 • Made by m4x_678" }
                 }]
             };
 
