@@ -1,1284 +1,1395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RURP STAFF TRAINER PRO | Official Staff Training & Assessment System</title>
-  <!-- Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Google Fonts: Inter & JetBrains Mono -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            rurp: {
-              red: '#dc2626',
-              darkred: '#991b1b',
-              lightred: '#ef4444',
-              charcoal: '#050507',
-              panel: '#0e0e12',
-              card: '#14141c',
-              border: '#22222e',
-              accent: '#f43f5e'
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace']
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RURP Imperial Command & Staff Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+        
+        :root {
+            --theme-bg: #0b0714;
+            --theme-card: rgba(23, 14, 40, 0.75);
+            --theme-purple: #9333ea;
+            --theme-purple-deep: #4c1d95;
+            --theme-gold: #eab308;
+            --theme-gold-glow: rgba(234, 179, 8, 0.25);
+            --theme-border: rgba(147, 51, 234, 0.35);
         }
-      }
-    }
-  </script>
-  <style>
-    body {
-      background-color: #050507;
-      color: #e2e8f0;
-      overflow-x: hidden;
-    }
-    .custom-cursor {
-      width: 18px;
-      height: 18px;
-      border: 2px solid #ef4444;
-      border-radius: 50%;
-      position: fixed;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: width 0.15s, height 0.15s, background-color 0.15s;
-      z-index: 9999;
-      box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
-    }
-    .custom-cursor-dot {
-      width: 4px;
-      height: 4px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      position: fixed;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 10000;
-    }
-    .glass-panel {
-      background: rgba(14, 14, 18, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
-    }
-    .glass-card {
-      background: rgba(20, 20, 28, 0.82);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(239, 68, 68, 0.15);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .glass-card:hover {
-      border-color: rgba(239, 68, 68, 0.5);
-      box-shadow: 0 0 25px rgba(220, 38, 38, 0.2);
-      transform: translateY(-2px);
-    }
-    .scanline-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
-      background-size: 100% 4px;
-      pointer-events: none;
-      z-index: 40;
-      opacity: 0.45;
-    }
-    /* Police Strobe Lighting Animation */
-    .police-siren-bar {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 4px;
-      z-index: 50;
-      background: linear-gradient(90deg, #dc2626, #2563eb, #dc2626);
-      background-size: 200% 100%;
-      animation: policeStrobe 1.5s infinite linear;
-    }
-    @keyframes policeStrobe {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
-    .police-glow {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.07;
-      background: radial-gradient(circle at 15% 15%, rgba(220, 38, 38, 0.9) 0%, transparent 45%),
-                  radial-gradient(circle at 85% 85%, rgba(37, 99, 235, 0.9) 0%, transparent 45%);
-      animation: sirenPulse 3.5s infinite alternate ease-in-out;
-    }
-    @keyframes sirenPulse {
-      0% { opacity: 0.04; transform: scale(1); }
-      50% { opacity: 0.1; transform: scale(1.05); }
-      100% { opacity: 0.04; transform: scale(1); }
-    }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #050507; }
-    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
-  </style>
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--theme-bg);
+            color: #f3f4f6;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        .gothic-title {
+            font-family: 'Cinzel Decorative', serif;
+            letter-spacing: 1px;
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Modern Royal Purple & Gold Glassmorphism */
+        .gothic-glass {
+            background: linear-gradient(135deg, rgba(24, 14, 42, 0.85) 0%, rgba(12, 6, 24, 0.92) 100%);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--theme-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(234, 179, 8, 0.2);
+        }
+
+        .gothic-card {
+            background: rgba(28, 16, 48, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .gothic-glow {
+            box-shadow: 0 0 35px rgba(147, 51, 234, 0.3), inset 0 0 15px rgba(234, 179, 8, 0.15);
+        }
+
+        /* Clean Animated Purple & Gold Mesh Canvas Background */
+        #gothic-video-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Subtle Cursor Particle Canvas */
+        #cursor-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0714;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #7e22ce;
+            border: 1px solid #eab308;
+            border-radius: 4px;
+        }
+    </style>
 </head>
-<body class="font-sans antialiased text-slate-200 min-h-screen selection:bg-red-600 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-yellow-400 selection:text-purple-950">
 
-  <!-- Custom Glowing Cursor -->
-  <div id="cursor" class="custom-cursor"></div>
-  <div id="cursor-dot" class="custom-cursor-dot"></div>
+    <canvas id="gothic-video-canvas"></canvas>
+    <canvas id="cursor-canvas"></canvas>
+    <div class="fixed inset-0 pointer-events-none z-0 opacity-10" style="background-image: radial-gradient(#eab308 1px, transparent 1px); background-size: 36px 36px;"></div>
 
-  <!-- Ambient Effects -->
-  <div class="police-siren-bar"></div>
-  <div class="police-glow"></div>
-  <div class="scanline-overlay"></div>
-  <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+    <!-- AUTHENTICATION OVERLAY / SECURITY PANEL -->
+    <div id="auth-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-purple-950/80 backdrop-blur-2xl">
+        <div class="gothic-glass rounded-3xl p-8 max-w-md w-full gothic-glow space-y-6 relative border border-yellow-500/40">
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 via-amber-500 to-purple-700 rounded-2xl flex items-center justify-center text-purple-950 text-2xl font-black mx-auto shadow-lg shadow-yellow-500/30 border border-yellow-300">
+                    <i class="fa-solid fa-chess-rook"></i>
+                </div>
+                <h2 class="text-2xl font-black text-yellow-300 gothic-title tracking-wider">RURP Command Vault</h2>
+                <p id="auth-subtitle" class="text-xs text-purple-200/70 font-medium">Enter credentials to breach the gates</p>
+            </div>
 
-  <!-- Toast Container -->
-  <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col gap-3"></div>
+            <!-- LOGIN FORM -->
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Discord Username / Tag</label>
+                    <input type="text" id="login-discord" required placeholder="e.g. m4x_678" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Account Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••••••" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                </div>
+                <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black py-3.5 rounded-xl shadow-lg shadow-yellow-400/20 transition text-xs uppercase tracking-wider gothic-title border border-yellow-200">
+                    <i class="fa-solid fa-key mr-2"></i> Enter Command Hub
+                </button>
+                <div class="text-center pt-2">
+                    <button type="button" onclick="toggleAuthMode('register'); playSfx('click');" class="text-xs text-yellow-400 hover:underline font-bold gothic-title">
+                        No account? Register here
+                    </button>
+                </div>
+            </form>
 
-  <!-- LOADING SCREEN (0-100%) -->
-  <div id="loading-screen" class="fixed inset-0 z-50 bg-[#050507] flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700">
-    <div class="max-w-md w-full glass-panel p-8 rounded-2xl border border-red-600/40 shadow-2xl space-y-6">
-      <div class="w-16 h-16 bg-red-600/20 border border-red-500/50 rounded-2xl flex items-center justify-center mx-auto text-red-500 animate-pulse shadow-lg shadow-red-950">
-        <i data-lucide="shield-alert" class="w-8 h-8"></i>
-      </div>
-      <div>
-        <h2 class="text-xl font-black text-white uppercase font-mono tracking-widest">RURP STAFF TRAINER PRO</h2>
-        <p id="loading-status" class="text-xs text-slate-400 font-mono mt-1">INITIALIZING SECURE PROTOCOLS...</p>
-      </div>
-      <div class="space-y-2">
-        <div class="flex justify-between text-xs font-mono text-slate-400">
-          <span>LOADING SYSTEM</span>
-          <span id="loading-pct">0%</span>
+            <!-- REGISTER FORM -->
+            <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Discord Username</label>
+                    <input type="text" id="reg-discord" required placeholder="e.g. poilet06" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Roblox Username</label>
+                    <input type="text" id="reg-roblox" required placeholder="e.g. poilet06" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Account Password</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••••••" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                </div>
+                <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black py-3.5 rounded-xl shadow-lg shadow-yellow-400/20 transition text-xs uppercase tracking-wider gothic-title border border-yellow-200">
+                    <i class="fa-solid fa-feather mr-2"></i> Register Account
+                </button>
+                <div class="text-center pt-2">
+                    <button type="button" onclick="toggleAuthMode('login'); playSfx('click');" class="text-xs text-yellow-400 hover:underline font-bold gothic-title">
+                        Already have an account? Login here
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
-          <div id="loading-bar" class="bg-gradient-to-r from-red-600 to-rose-500 h-full w-0 transition-all duration-75"></div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- LOGIN SCREEN -->
-  <div id="login-screen" class="hidden min-h-screen flex items-center justify-center p-4 relative z-10">
-    <div class="max-w-md w-full glass-panel p-8 rounded-2xl border border-red-600/30 shadow-2xl relative overflow-hidden">
-      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 via-rose-500 to-red-600"></div>
-      
-      <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-red-600/15 border border-red-500/40 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-red-950/50">
-          <i data-lucide="shield-check" class="w-9 h-9 text-red-500"></i>
+    <!-- HEADER NAVIGATION -->
+    <header class="sticky top-0 z-40 border-b border-purple-500/30 gothic-glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-purple-600 flex items-center justify-center font-black text-purple-950 text-2xl shadow-xl shadow-purple-900/40 border border-yellow-300">
+                    RU
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-yellow-200 gothic-title flex items-center gap-2">
+                        RURP Staff Hub
+                        <span id="role-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 code-font">STAFF</span>
+                    </h1>
+                    <p class="text-xs text-purple-300/60">Emergency Hamburg • Evaluation Suite</p>
+                </div>
+            </div>
+
+            <nav class="flex items-center space-x-2 bg-purple-950/80 p-1.5 rounded-2xl border border-purple-500/30">
+                <button onclick="switchTab('eval')" id="tab-btn-eval" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-950 shadow-lg shadow-yellow-500/20 gothic-title">
+                    <i class="fa-solid fa-crown"></i> Active Exam
+                </button>
+                <button onclick="switchTab('bank')" id="tab-btn-bank" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                    <i class="fa-solid fa-book-bookmark"></i> Question Bank
+                </button>
+                <button onclick="switchTab('history')" id="tab-btn-history" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i> History Vault
+                </button>
+                <button onclick="switchTab('admin')" id="tab-btn-admin" class="hidden px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-400 hover:text-white transition-all flex items-center gap-2 bg-purple-500/20 border border-yellow-400/40 gothic-title">
+                    <i class="fa-solid fa-user-shield"></i> Admin Panel
+                </button>
+                <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                    <i class="fa-solid fa-gear"></i> Settings
+                </button>
+            </nav>
         </div>
-        <h1 class="text-2xl font-black tracking-wider text-white uppercase font-mono">RURP STAFF TRAINER PRO</h1>
-        <p class="text-xs text-slate-400 font-semibold tracking-widest mt-1 uppercase">Realistic Union RolePlay</p>
-      </div>
-
-      <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
-        <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Trainer Access Password</label>
-          <div class="relative">
-            <input type="password" id="login-password" required placeholder="Enter secure password" class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 font-mono transition-all pr-10 text-white placeholder-slate-500" />
-            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-3.5 text-slate-400 hover:text-slate-200">
-              <i data-lucide="eye" id="eye-icon" class="w-4 h-4"></i>
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-red-900/40 transition-all flex items-center justify-center gap-2 tracking-wider text-sm uppercase font-mono">
-          <i data-lucide="lock" class="w-4 h-4"></i> Authenticate Session
-        </button>
-      </form>
-      
-      <div class="mt-6 pt-4 border-t border-slate-800 text-center flex justify-between items-center text-[11px] text-slate-500 font-mono">
-        <span>SECURE AUTH GATEWAY</span>
-        <span>ENCRYPTED</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- MAIN APP CONTAINER -->
-  <div id="main-app" class="hidden min-h-screen flex flex-col relative z-10">
-
-    <!-- Top Navigation Bar -->
-    <header class="glass-panel sticky top-0 z-30 border-b border-red-900/30 px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <div class="w-10 h-10 bg-red-600/20 border border-red-500/50 rounded-xl flex items-center justify-center text-red-500 shadow-md shadow-red-950">
-          <i data-lucide="shield-alert" class="w-6 h-6"></i>
-        </div>
-        <div>
-          <h1 class="font-extrabold text-lg text-white tracking-wider flex items-center gap-2 uppercase font-mono">
-            RURP <span class="text-red-500">|</span> Staff Trainer Pro
-          </h1>
-          <p class="text-xs text-slate-400 font-medium">Official Staff Training & Assessment System</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <div class="bg-red-950/40 border border-red-800/40 px-3 py-1.5 rounded-lg flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-          <span class="text-xs font-mono text-emerald-400 font-semibold tracking-wider uppercase">Secure Session Active</span>
-        </div>
-
-        <button onclick="handleLogout()" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700 text-xs font-medium transition flex items-center gap-1.5 font-mono">
-          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
-        </button>
-      </div>
     </header>
 
-    <div class="flex-1 flex flex-col md:flex-row">
-      <!-- Sidebar -->
-      <aside class="w-full md:w-64 glass-panel border-r border-slate-800/80 p-4 space-y-2 flex-shrink-0">
-        <div class="text-[11px] font-mono uppercase tracking-widest text-slate-500 px-3 py-2">Navigation</div>
-        
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-3 transition bg-red-600 text-white shadow-md shadow-red-950">
-          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-        </button>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full z-10">
 
-        <button onclick="switchTab('start-training')" id="nav-start-training" class="nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-3 transition text-slate-400 hover:bg-slate-800/60 hover:text-slate-200">
-          <i data-lucide="play-circle" class="w-4 h-4"></i> Start Training
-        </button>
+        <!-- TAB 1: EVALUATION SUITE -->
+        <div id="tab-eval" class="space-y-6">
+            <div id="setup-card" class="gothic-glass rounded-3xl p-8 max-w-2xl mx-auto gothic-glow border border-purple-500/30">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-600/30 to-yellow-500/20 border border-yellow-400/50 rounded-2xl flex items-center justify-center text-yellow-300 text-2xl mx-auto mb-4 shadow-inner">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-yellow-200 gothic-title">Start Training Session</h2>
+                    <p class="text-purple-200/70 text-sm mt-1">4-Section Standard: Commands (10), Questions (10), Meeting (10), Driving + Pullover (20).</p>
+                </div>
 
-        <button onclick="switchTab('active-training')" id="nav-active-training" class="nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-3 transition text-slate-400 hover:bg-slate-800/60 hover:text-slate-200">
-          <i data-lucide="file-check-2" class="w-4 h-4"></i> Active Training
-        </button>
+                <form onsubmit="startSession(event)" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-2 gothic-title">Trainee Username / Discord Tag</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-yellow-400"><i class="fa-solid fa-user"></i></span>
+                            <input type="text" id="setup-trainee" required placeholder="e.g. @TraineeRoblox" class="w-full bg-purple-950/80 border border-purple-500/40 rounded-xl pl-11 pr-4 py-3.5 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                        </div>
+                    </div>
 
-        <button onclick="switchTab('history')" id="nav-history" class="nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-3 transition text-slate-400 hover:bg-slate-800/60 hover:text-slate-200">
-          <i data-lucide="history" class="w-4 h-4"></i> Training History
-        </button>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-2 gothic-title">Trainer Username / Discord Tag</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-yellow-400"><i class="fa-solid fa-user-shield"></i></span>
+                            <input type="text" id="setup-trainer" required placeholder="e.g. @SeniorTrainer" class="w-full bg-purple-950/80 border border-purple-500/40 rounded-xl pl-11 pr-4 py-3.5 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                        </div>
+                    </div>
 
-        <button onclick="switchTab('screenshots')" id="nav-screenshots" class="nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-3 transition text-slate-400 hover:bg-slate-800/60 hover:text-slate-200">
-          <i data-lucide="image" class="w-4 h-4"></i> Saved Screenshots
-        </button>
+                    <div class="bg-purple-900/30 border border-purple-500/30 rounded-2xl p-4 flex items-start gap-3 text-xs text-purple-200">
+                        <i class="fa-solid fa-circle-info text-base shrink-0 mt-0.5 text-yellow-400"></i>
+                        <p>Passing requirement: <strong>42.5 / 50 Points (85%)</strong>. Pullover tasks are integrated into the 20-Point Driving Section. Each question tracks exact time taken!</p>
+                    </div>
 
-        <button onclick="switchTab('question-bank')" id="nav-question-bank" class="nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-3 transition text-slate-400 hover:bg-slate-800/60 hover:text-slate-200">
-          <i data-lucide="database" class="w-4 h-4"></i> Question Bank
-        </button>
-
-        <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-3 transition text-slate-400 hover:bg-slate-800/60 hover:text-slate-200">
-          <i data-lucide="sliders" class="w-4 h-4"></i> Settings
-        </button>
-      </aside>
-
-      <!-- Content Area -->
-      <main class="flex-1 p-6 overflow-y-auto max-w-7xl mx-auto w-full space-y-6">
-
-        <!-- DASHBOARD TAB -->
-        <div id="tab-dashboard" class="space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h2 class="text-2xl font-black text-white uppercase font-mono tracking-wider">Trainer Command Center</h2>
-              <p class="text-sm text-slate-400">Overview of RURP staff training metrics and session archives.</p>
-            </div>
-            <button onclick="switchTab('start-training')" class="bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition flex items-center gap-2 shadow-lg shadow-red-900/30 font-mono">
-              <i data-lucide="play-circle" class="w-4 h-4"></i> Start New Training
-            </button>
-          </div>
-
-          <!-- Stats Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-            <div class="glass-card p-4 rounded-2xl border border-red-500/20">
-              <p class="text-[11px] font-mono uppercase text-slate-400">Total Sessions</p>
-              <h3 id="stat-total" class="text-2xl font-black text-white mt-1 font-mono">0</h3>
-            </div>
-            <div class="glass-card p-4 rounded-2xl border border-red-500/20">
-              <p class="text-[11px] font-mono uppercase text-slate-400">Total Trainees</p>
-              <h3 id="stat-trainees" class="text-2xl font-black text-white mt-1 font-mono">0</h3>
-            </div>
-            <div class="glass-card p-4 rounded-2xl border border-red-500/20">
-              <p class="text-[11px] font-mono uppercase text-slate-400">Passed</p>
-              <h3 id="stat-passed" class="text-2xl font-black text-emerald-400 mt-1 font-mono">0</h3>
-            </div>
-            <div class="glass-card p-4 rounded-2xl border border-red-500/20">
-              <p class="text-[11px] font-mono uppercase text-slate-400">Failed</p>
-              <h3 id="stat-failed" class="text-2xl font-black text-red-400 mt-1 font-mono">0</h3>
-            </div>
-            <div class="glass-card p-4 rounded-2xl border border-red-500/20">
-              <p class="text-[11px] font-mono uppercase text-slate-400">Incomplete</p>
-              <h3 id="stat-incomplete" class="text-2xl font-black text-amber-400 mt-1 font-mono">0</h3>
-            </div>
-            <div class="glass-card p-4 rounded-2xl border border-red-500/20">
-              <p class="text-[11px] font-mono uppercase text-slate-400">Screenshots</p>
-              <h3 id="stat-screenshots" class="text-2xl font-black text-white mt-1 font-mono">0</h3>
-            </div>
-          </div>
-
-          <!-- Quick Action & Recent Drafts -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-              <h3 class="font-bold text-lg text-white uppercase font-mono flex items-center gap-2">
-                <i data-lucide="file-text" class="text-red-500 w-5 h-5"></i> Unfinished Draft Sessions
-              </h3>
-              <div id="dashboard-drafts" class="space-y-2">
-                <p class="text-sm text-slate-500 font-mono">No draft sessions found.</p>
-              </div>
+                    <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black py-4 rounded-xl shadow-xl shadow-purple-900/40 transition text-xs uppercase tracking-wider gothic-title border border-yellow-300 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-play text-base"></i> Launch Evaluation Session
+                    </button>
+                </form>
             </div>
 
-            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-              <h3 class="font-bold text-lg text-white uppercase font-mono flex items-center gap-2">
-                <i data-lucide="activity" class="text-red-500 w-5 h-5"></i> Recent Training Activity
-              </h3>
-              <div id="dashboard-recent" class="space-y-2">
-                <p class="text-sm text-slate-500 font-mono">No recent training logs.</p>
-              </div>
+            <!-- ACTIVE EXAM INTERFACE -->
+            <div id="active-session" class="hidden space-y-6">
+                <div class="gothic-glass rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-purple-500/30">
+                    <div class="flex items-center gap-4 w-full md:w-auto">
+                        <div class="w-12 h-12 rounded-xl bg-purple-950 border border-purple-500/40 flex items-center justify-center text-yellow-400 text-xl shadow-md">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] uppercase font-bold text-yellow-400/70 tracking-wider gothic-title">Trainee</span>
+                                <span id="session-timer" class="code-font text-xs text-yellow-300 bg-purple-950 border border-purple-500/40 px-2.5 py-0.5 rounded-md">Total 00:00</span>
+                            </div>
+                            <h3 id="display-trainee-name" class="text-lg font-extrabold text-white">TraineeName</h3>
+                            <p class="text-xs text-purple-300/75">Trainer: <span id="display-trainer-name" class="text-white font-semibold">TrainerName</span></p>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 w-full max-w-md space-y-2">
+                        <div class="flex justify-between text-xs font-bold">
+                            <span id="current-step-label" class="text-yellow-400 gothic-title">Question 1 of 22</span>
+                            <span id="overall-percent" class="text-purple-300/70">0% Done</span>
+                        </div>
+                        <div class="w-full h-3 bg-purple-950 rounded-full overflow-hidden border border-purple-500/30 shadow-inner">
+                            <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-purple-500 via-purple-400 to-yellow-400 transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-5 w-full md:w-auto justify-end border-t md:border-t-0 border-purple-500/20 pt-4 md:pt-0">
+                        <div class="text-right">
+                            <div class="text-[10px] text-yellow-400/70 font-bold uppercase tracking-wider gothic-title">Live Score</div>
+                            <div class="text-2xl font-black text-white code-font">
+                                <span id="live-score">0.0</span> <span class="text-xs text-purple-400/60 font-normal">/ 50</span>
+                            </div>
+                        </div>
+                        <div id="status-badge" class="px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/40 text-rose-400 text-xs font-extrabold flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-circle-xmark"></i> FAIL
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gothic-glass rounded-3xl p-6 sm:p-8 relative gothic-glow space-y-6 border border-purple-500/30">
+                    <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-purple-500/30">
+                        <div class="flex items-center gap-3">
+                            <span id="q-category-tag" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold uppercase tracking-wider bg-purple-500/20 text-yellow-300 border border-purple-500/40 gothic-title">
+                                Section 1: Commands
+                            </span>
+                            <span id="q-weight-tag" class="text-xs font-bold text-yellow-300 bg-purple-950 px-3 py-1.5 rounded-xl border border-purple-500/30 shadow-sm code-font">
+                                Max Points: 1.0 Pt
+                            </span>
+                            <span class="text-xs font-bold text-yellow-300 bg-purple-950 px-3 py-1.5 rounded-xl border border-purple-500/30 flex items-center gap-1.5">
+                                <i class="fa-solid fa-stopwatch text-yellow-400"></i> Time on Q: <span id="q-timer-display" class="code-font">00:00</span>
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyQuestionForRoblox(); playSfx('click');" class="px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-extrabold text-xs transition shadow-lg shadow-yellow-500/20 flex items-center gap-2 gothic-title border border-yellow-200">
+                                <i class="fa-solid fa-gamepad"></i> Copy Question for Roblox Chat
+                            </button>
+                            <button onclick="toggleSpag(); playSfx('click');" id="spag-btn" class="px-3 py-2 rounded-xl text-xs font-bold bg-purple-950 text-purple-300/70 hover:text-rose-400 border border-purple-500/30 transition flex items-center gap-1.5 gothic-title">
+                                <i class="fa-solid fa-font"></i> SPaG (-0.5)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-xs uppercase font-extrabold text-yellow-400/70 tracking-wider gothic-title">Exam Prompt / Scenario</h3>
+                        <p id="q-prompt-text" class="text-xl sm:text-2xl font-black text-white leading-relaxed">
+                            Loading question...
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-purple-950/80 border border-purple-500/30 rounded-2xl p-4 space-y-2 shadow-inner">
+                            <span class="text-xs font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-2 gothic-title">
+                                <i class="fa-solid fa-bullseye"></i> Purpose & Expected Answer
+                            </span>
+                            <p id="q-answer-guide" class="text-xs sm:text-sm text-purple-100 code-font leading-relaxed">
+                                Loading guidelines...
+                            </p>
+                        </div>
+                        <div class="bg-purple-950/80 border border-purple-500/30 rounded-2xl p-4 space-y-2 shadow-inner">
+                            <span class="text-xs font-extrabold text-yellow-300 uppercase tracking-wider flex items-center gap-2 gothic-title">
+                                <i class="fa-solid fa-scale-balanced"></i> Marking Scheme Breakdown
+                            </span>
+                            <p id="q-marking-reason" class="text-xs sm:text-sm text-purple-100 leading-relaxed">
+                                Select score below based on accuracy.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div class="space-y-2">
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-yellow-300 gothic-title">Record Trainee's Exact Answer</label>
+                            <textarea id="trainee-answer-input" oninput="saveCurrentAnswerText()" rows="3" placeholder="Type or paste what the trainee typed in Roblox chat..." class="w-full bg-purple-950/90 border border-purple-500/40 rounded-2xl p-3.5 text-xs text-white code-font focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition"></textarea>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-yellow-300 gothic-title">Attach Proof Screenshot for this Q</label>
+                            <div class="flex items-center gap-3">
+                                <input type="file" id="q-screenshot-input" accept="image/*" onchange="handleScreenshotUpload(event)" class="hidden">
+                                <button type="button" onclick="document.getElementById('q-screenshot-input').click(); playSfx('click');" class="px-4 py-3 rounded-xl bg-purple-950 border border-purple-500/40 hover:border-yellow-400 text-purple-200 hover:text-white text-xs font-bold transition flex items-center gap-2 gothic-title">
+                                    <i class="fa-solid fa-upload text-yellow-400"></i> Upload Image
+                                </button>
+                                <div id="screenshot-preview-badge" class="text-xs text-purple-400 italic">No image attached</div>
+                            </div>
+                            <div id="screenshot-thumbnail-container" class="mt-2 hidden">
+                                <img id="screenshot-thumbnail" src="" class="h-16 rounded-xl border border-yellow-400/50 object-cover shadow-md">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <label class="block text-xs font-extrabold uppercase tracking-wider text-purple-200 gothic-title">Award Points for This Question</label>
+                        <div id="scoring-buttons-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-6 border-t border-purple-500/30">
+                        <button onclick="prevQuestion(); playSfx('click');" id="prev-btn" class="px-5 py-3 rounded-xl bg-purple-950 hover:bg-purple-900 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 border border-purple-500/30 disabled:opacity-40 disabled:cursor-not-allowed gothic-title">
+                            <i class="fa-solid fa-arrow-left"></i> Previous
+                        </button>
+                        <div class="text-xs text-yellow-400/70 font-semibold hidden sm:block gothic-title">Click scoring buttons to record marks instantly</div>
+                        <button onclick="nextQuestion(); playSfx('click');" id="next-btn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black text-xs sm:text-sm transition shadow-lg shadow-yellow-400/20 flex items-center gap-2 gothic-title border border-yellow-200">
+                            Next Question <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="completion-summary-panel" class="gothic-glass rounded-3xl p-6 sm:p-8 space-y-6 border border-purple-500/30">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-purple-500/30">
+                        <div>
+                            <h3 class="text-xl font-black text-white flex items-center gap-2 gothic-title">
+                                <i class="fa-solid fa-square-poll-vertical text-yellow-400"></i> Training Result Summary
+                            </h3>
+                            <p class="text-xs text-purple-300/70 mt-1">Review finalized scores and post directly to Discord slash command.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="submitToWebhook()" class="px-5 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs sm:text-sm transition shadow-lg shadow-purple-600/30 flex items-center gap-2 gothic-title border border-purple-400/40">
+                                <i class="fa-brands fa-discord"></i> Send via Webhook
+                            </button>
+                            <button onclick="copySlashCommand(); playSfx('click');" class="px-5 py-3 rounded-xl bg-purple-950 hover:bg-purple-900 text-yellow-300 font-extrabold text-xs sm:text-sm border border-purple-500/40 transition flex items-center gap-2 gothic-title">
+                                <i class="fa-solid fa-copy"></i> Copy /training-results
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-extrabold uppercase text-yellow-400 mb-2 gothic-title">Trainer Note</label>
+                        <textarea id="trainer-notes" rows="2" placeholder="e.g. Magnificent work through cathedral evaluation! Excellent command mastery." class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl p-3.5 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition"></textarea>
+                    </div>
+
+                    <div class="bg-purple-950/90 border border-purple-500/30 rounded-2xl p-5 space-y-4 shadow-xl">
+                        <div class="flex items-center gap-2 text-xs font-extrabold text-purple-300 uppercase tracking-wider gothic-title">
+                            <i class="fa-brands fa-discord text-yellow-400 text-base"></i> Discord Slash Command Preview
+                        </div>
+                        <div class="border-l-4 rounded-lg pl-4 py-2 space-y-3 bg-purple-900/40 border-rose-500" id="discord-embed-border">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-extrabold text-white">RURP Staff Training Log</span>
+                                <span id="embed-status-tag" class="text-xs font-extrabold px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-400">FAILED</span>
+                            </div>
+                            <div class="text-xs text-purple-200 space-y-1 code-font">
+                                <div><strong>Trainee:</strong> <span id="embed-trainee">-</span></div>
+                                <div><strong>Trainer:</strong> <span id="embed-trainer">-</span></div>
+                                <div><strong>Overall Score:</strong> <span id="embed-score">0 / 50</span></div>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-purple-800/50 text-xs">
+                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
+                                    <div class="text-[10px] text-purple-300/70 font-semibold">Commands</div>
+                                    <div id="embed-sec-1" class="font-extrabold text-white">0/10</div>
+                                </div>
+                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
+                                    <div class="text-[10px] text-purple-300/70 font-semibold">Questions</div>
+                                    <div id="embed-sec-2" class="font-extrabold text-white">0/10</div>
+                                </div>
+                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
+                                    <div class="text-[10px] text-purple-300/70 font-semibold">Meeting</div>
+                                    <div id="embed-sec-3" class="font-extrabold text-white">0/10</div>
+                                </div>
+                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
+                                    <div class="text-[10px] text-yellow-400 font-semibold">Driving + Pullover</div>
+                                    <div id="embed-sec-4" class="font-extrabold text-white">0/20</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
 
-        <!-- START TRAINING TAB -->
-        <div id="tab-start-training" class="hidden space-y-6 max-w-2xl mx-auto">
-          <div class="glass-panel p-8 rounded-2xl border border-red-900/40 space-y-6">
-            <div>
-              <h2 class="text-2xl font-black text-white uppercase font-mono tracking-wider">Initialize New Training</h2>
-              <p class="text-sm text-slate-400 mt-1">Enter applicant and trainer credentials to open the active workspace.</p>
-            </div>
-
-            <form onsubmit="handleStartTraining(event)" class="space-y-4">
-              <div>
-                <label class="block text-xs font-mono uppercase text-slate-300 mb-1">Trainee Roblox Username *</label>
-                <input type="text" id="form-trainee-username" required placeholder="e.g. OfficerJohn" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-red-500 focus:outline-none font-medium text-white" />
-              </div>
-
-              <div>
-                <label class="block text-xs font-mono uppercase text-slate-300 mb-1">Trainee Roblox User ID (Optional)</label>
-                <input type="text" id="form-trainee-userid" placeholder="e.g. 12345678" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-red-500 focus:outline-none font-medium text-white" />
-              </div>
-
-              <div>
-                <label class="block text-xs font-mono uppercase text-slate-300 mb-1">Trainer Username *</label>
-                <input type="text" id="form-trainer-username" required placeholder="e.g. LeadTrainerMax" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-red-500 focus:outline-none font-medium text-white" />
-              </div>
-
-              <div>
-                <label class="block text-xs font-mono uppercase text-slate-300 mb-1">Training Session Notes (Optional)</label>
-                <textarea id="form-session-notes" rows="3" placeholder="Initial observations or special instructions..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-red-500 focus:outline-none font-medium text-white"></textarea>
-              </div>
-
-              <div class="flex gap-4 pt-2">
-                <button type="submit" class="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-red-950 transition flex items-center justify-center gap-2 uppercase tracking-wider text-sm font-mono">
-                  <i data-lucide="play" class="w-4 h-4"></i> Start Training Session
-                </button>
-                <button type="button" onclick="saveAsDraft()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-6 py-3.5 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider transition">
-                  Save as Draft
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- ACTIVE TRAINING WORKSPACE TAB -->
-        <div id="tab-active-training" class="hidden space-y-6">
-          <div class="glass-panel p-6 rounded-2xl border border-red-900/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <div class="flex items-center gap-2">
-                <span id="ws-section-badge" class="px-2.5 py-1 rounded-md bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-mono font-bold uppercase">Section 1</span>
-                <span class="text-xs font-mono text-slate-400">Trainee: <strong id="ws-trainee-display" class="text-white">None</strong></span>
-              </div>
-              <h2 id="ws-question-title" class="text-xl font-black text-white mt-2 font-mono">Loading Question...</h2>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <span id="autosave-status" class="text-xs font-mono text-emerald-400 flex items-center gap-1.5 bg-emerald-950/40 border border-emerald-800/50 px-3 py-1.5 rounded-lg">
-                <i data-lucide="check" class="w-3.5 h-3.5"></i> Saved
-              </span>
-              <button onclick="openReportPreview()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition flex items-center gap-1.5 shadow-lg shadow-red-950">
-                <i data-lucide="file-text" class="w-4 h-4"></i> Review & Submit
-              </button>
-            </div>
-          </div>
-
-          <!-- Question Workspace Card -->
-          <div class="glass-panel p-8 rounded-2xl border border-slate-800 space-y-6">
-            <div class="space-y-2">
-              <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                <span id="ws-question-counter">Question 1 of 18</span>
-                <span id="ws-section-name">Command Knowledge</span>
-              </div>
-              <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden border border-slate-800">
-                <div id="ws-progress-bar" class="bg-red-600 h-full w-0 transition-all duration-300"></div>
-              </div>
-            </div>
-
-            <!-- Question Box -->
-            <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-xl space-y-4">
-              <div>
-                <span class="text-[11px] font-mono uppercase text-red-500 font-bold block mb-1">Question Prompt</span>
-                <p id="ws-q-text" class="text-lg font-semibold text-white leading-relaxed">Loading prompt...</p>
-              </div>
-
-              <!-- Copy Buttons -->
-              <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-800">
-                <button onclick="copyQuestionText()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition">
-                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Question
-                </button>
-                <button onclick="copyExpectedAnswer()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition">
-                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Expected Answer
-                </button>
-                <button onclick="copyBothText()" class="bg-red-950/60 hover:bg-red-900/60 border border-red-800/50 text-red-300 px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition">
-                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Both
-                </button>
-              </div>
-            </div>
-
-            <!-- Expected Answer (Trainer Only) -->
-            <div class="bg-slate-950/80 border border-amber-900/40 p-5 rounded-xl space-y-2">
-              <span class="text-[11px] font-mono uppercase text-amber-400 font-bold flex items-center gap-1.5">
-                <i data-lucide="lock" class="w-3.5 h-3.5"></i> Expected Answer (Trainer Eyes Only)
-              </span>
-              <p id="ws-expected-answer" class="text-sm font-mono text-slate-300 whitespace-pre-wrap">Loading expected answer...</p>
-            </div>
-
-            <!-- Trainee Response & Marking -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="space-y-2">
-                <label class="block text-xs font-mono uppercase text-slate-400">Trainee Response / Notes</label>
-                <textarea id="ws-trainee-response" oninput="saveCurrentQuestionData()" rows="4" placeholder="Record trainee response here..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:border-red-500 focus:outline-none font-medium text-white"></textarea>
-              </div>
-
-              <div class="space-y-4">
+        <!-- TAB 2: QUESTION BANK -->
+        <div id="tab-bank" class="hidden space-y-6">
+            <div class="gothic-glass rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-purple-500/30">
                 <div>
-                  <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Awarded Points (Max: <span id="ws-max-points">1</span>)</label>
-                  <input type="number" id="ws-awarded-points" min="0" max="10" step="0.5" onchange="saveCurrentQuestionData()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm font-mono focus:border-red-500 focus:outline-none text-white" />
+                    <h2 class="text-xl font-black text-white gothic-title">Master Question Bank</h2>
+                    <p class="text-xs text-yellow-400/70 mt-1">All 4 sections with complete pullover guidelines & Roblox copy helpers.</p>
                 </div>
-
-                <div class="flex gap-2">
-                  <button onclick="setAnswerStatus('correct')" id="btn-status-correct" class="flex-1 bg-slate-900 hover:bg-emerald-950/40 border border-slate-700 hover:border-emerald-500 text-slate-300 py-2.5 rounded-xl text-xs font-mono font-bold uppercase transition">Correct</button>
-                  <button onclick="setAnswerStatus('partial')" id="btn-status-partial" class="flex-1 bg-slate-900 hover:bg-amber-950/40 border border-slate-700 hover:border-amber-500 text-slate-300 py-2.5 rounded-xl text-xs font-mono font-bold uppercase transition">Partial</button>
-                  <button onclick="setAnswerStatus('incorrect')" id="btn-status-incorrect" class="flex-1 bg-slate-900 hover:bg-red-950/40 border border-slate-700 hover:border-red-500 text-slate-300 py-2.5 rounded-xl text-xs font-mono font-bold uppercase transition">Incorrect</button>
-                </div>
-              </div>
+                <span class="text-xs bg-yellow-400/20 border border-yellow-400/40 text-yellow-300 px-3 py-1.5 rounded-xl font-extrabold gothic-title">22 Questions Loaded</span>
             </div>
-
-            <!-- Screenshot Evidence Upload -->
-            <div class="space-y-3 pt-4 border-t border-slate-800">
-              <div class="flex justify-between items-center">
-                <span class="text-xs font-mono uppercase text-slate-400 font-bold">Screenshot Evidence</span>
-                <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition">
-                  <i data-lucide="upload" class="w-3.5 h-3.5"></i> Upload Screenshot
-                  <input type="file" id="ws-screenshot-input" accept="image/png, image/jpeg, image/webp" onchange="handleScreenshotUpload(event)" class="hidden" />
-                </label>
-              </div>
-              <div id="ws-screenshots-list" class="flex flex-wrap gap-3">
-                <p class="text-xs text-slate-500 font-mono">No screenshots attached to this question yet.</p>
-              </div>
-            </div>
-
-            <!-- Navigation Controls -->
-            <div class="flex justify-between items-center pt-6 border-t border-slate-800">
-              <button onclick="prevQuestion()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition flex items-center gap-2">
-                <i data-lucide="arrow-left" class="w-4 h-4"></i> Previous
-              </button>
-              <button onclick="nextQuestion()" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition flex items-center gap-2 shadow-lg shadow-red-950">
-                Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
+            <div id="question-bank-render" class="space-y-4"></div>
         </div>
 
-        <!-- TRAINING HISTORY TAB -->
+        <!-- TAB 3: HISTORY VAULT -->
         <div id="tab-history" class="hidden space-y-6">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <h2 class="text-2xl font-black text-white uppercase font-mono tracking-wider">Training History Archive</h2>
-            <div class="flex flex-wrap gap-3">
-              <input type="text" id="filter-search" oninput="renderHistoryTable()" placeholder="Search trainee or trainer..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono focus:border-red-500 focus:outline-none text-white" />
-              <select id="filter-status" onchange="renderHistoryTable()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono focus:border-red-500 focus:outline-none text-slate-300">
-                <option value="ALL">All Status</option>
-                <option value="PASS">Pass</option>
-                <option value="FAIL">Fail</option>
-                <option value="INCOMPLETE">Incomplete</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-900/80 border-b border-slate-800 text-xs font-mono uppercase text-slate-400">
-                    <th class="p-4">Date</th>
-                    <th class="p-4">Trainee</th>
-                    <th class="p-4">Trainer</th>
-                    <th class="p-4">Score</th>
-                    <th class="p-4">Percentage</th>
-                    <th class="p-4">Status</th>
-                    <th class="p-4">Discord</th>
-                    <th class="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="history-table-rows" class="divide-y divide-slate-800 text-sm">
-                  <tr><td colspan="8" class="p-6 text-center text-slate-500 font-mono">No training records found.</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- SAVED SCREENSHOTS TAB -->
-        <div id="tab-screenshots" class="hidden space-y-6">
-          <h2 class="text-2xl font-black text-white uppercase font-mono tracking-wider">Saved Evidence Screenshots</h2>
-          <div id="global-screenshots-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <p class="text-sm text-slate-500 font-mono">No screenshots uploaded yet.</p>
-          </div>
-        </div>
-
-        <!-- QUESTION BANK TAB -->
-        <div id="tab-question-bank" class="hidden space-y-6">
-          <h2 class="text-2xl font-black text-white uppercase font-mono tracking-wider">Official RURP Question Bank</h2>
-          <div id="question-bank-container" class="space-y-4"></div>
-        </div>
-
-        <!-- SETTINGS TAB -->
-        <div id="tab-settings" class="hidden space-y-6 max-w-2xl mx-auto">
-          <div class="glass-panel p-8 rounded-2xl border border-slate-800 space-y-6">
-            <h2 class="text-2xl font-black text-white uppercase font-mono tracking-wider">System Settings</h2>
-            
-            <div class="space-y-4">
-              <div>
-                <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Discord Webhook URL (DISCORD_TRAINING_WEBHOOK_URL)</label>
-                <input type="password" id="setting-webhook" value="https://discord.com/api/webhooks/1564935972863479891/bIkFfdn8pqhyy6VjXLiBWE7XbODNE9QJRFbkYt2JAuBYX3dcchAjePHO-3CzoctouOVV" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm font-mono text-slate-300 focus:border-red-500 focus:outline-none" />
-              </div>
-
-              <div>
-                <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Passing Threshold Score</label>
-                <input type="number" id="setting-passing-score" value="42.5" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm font-mono text-slate-300 focus:border-red-500 focus:outline-none" />
-              </div>
-
-              <div class="pt-4 flex gap-4">
-                <button onclick="saveSettings()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-xl text-xs font-mono uppercase tracking-wider transition shadow-lg shadow-red-950">
-                  Save Settings
-                </button>
-                <button onclick="testWebhook()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-6 py-3 rounded-xl text-xs font-mono uppercase tracking-wider transition">
-                  Test Webhook Connection
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </main>
-    </div>
-  </div>
-
-  <!-- REPORT PREVIEW MODAL -->
-  <div id="report-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="max-w-3xl w-full max-h-[90vh] glass-panel rounded-2xl border border-red-600/50 flex flex-col overflow-hidden shadow-2xl">
-      <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/80">
-        <div>
-          <h3 class="text-xl font-black text-white uppercase font-mono tracking-wider">Training Report Preview</h3>
-          <p class="text-xs text-slate-400 font-mono">Review complete assessment before dispatching to Discord.</p>
-        </div>
-        <button onclick="closeReportPreview()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
-      </div>
-
-      <div id="report-modal-content" class="p-6 overflow-y-auto space-y-6 flex-1 text-sm font-mono"></div>
-
-      <div class="p-6 border-t border-slate-800 bg-slate-900/80 flex justify-end gap-4">
-        <button onclick="closeReportPreview()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-5 py-2.5 rounded-xl text-xs font-mono uppercase">Edit Training</button>
-        <button onclick="submitTrainingToDiscord()" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs font-mono uppercase shadow-lg shadow-red-950 flex items-center gap-2">
-          <i data-lucide="send" class="w-4 h-4"></i> Submit Results to Discord
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- LIGHTBOX MODAL -->
-  <div id="lightbox-modal" class="hidden fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onclick="closeLightbox()">
-    <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] rounded-xl border border-red-500/40 shadow-2xl" />
-  </div>
-
-  <!-- APPLICATION SCRIPT -->
-  <script>
-    const SYSTEM_PASSWORD = "16082012@A"; // Strict configured password
-    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1564935972863479891/bIkFfdn8pqhyy6VjXLiBWE7XbODNE9QJRFbkYt2JAuBYX3dcchAjePHO-3CzoctouOVV";
-
-    // STRICT QUESTION BANK (EXACT 18 QUESTIONS ACROSS 5 SECTIONS)
-    const questionsDB = [
-      // Section 1: Command Knowledge (6 Questions)
-      { id: 's1_q1', section: 1, sectionName: "Command Knowledge", q: "What command can you use to spawn yourself an admin vehicle?", a: "The verified RURP admin vehicle spawn command.", max: 1 },
-      { id: 's1_q2', section: 1, sectionName: "Command Knowledge", q: "Which command would you use to remove a disruptive player from the server temporarily?", a: "The server's kick command.", max: 1 },
-      { id: 's1_q3', section: 1, sectionName: "Command Knowledge", q: "What command allows you to permanently remove a player from the server?", a: "The server's ban command.", max: 1 },
-      { id: 's1_q4', section: 1, sectionName: "Command Knowledge", q: "Which command allows you to teleport yourself to another player?", a: "The server's teleport command.", max: 1 },
-      { id: 's1_q5', section: 1, sectionName: "Command Knowledge", q: "What command can you use to stop a player from moving if they are disrupting RP?", a: "The server's freeze command.", max: 1 },
-      { id: 's1_q6', section: 1, sectionName: "Command Knowledge", q: "What command can you use to make yourself fly?", a: "The verified RURP fly command.", max: 1 },
-
-      // Section 2: Knowledge Questions (7 Questions)
-      { id: 's2_q1', section: 2, sectionName: "Knowledge Questions", q: "What is MCRP? Give its consequence and an example.", a: "MCRP stands for Missing Crash Roleplay. It occurs when a player fails to roleplay a vehicle crash properly.\nExample: A player crashes into another vehicle and immediately drives away without roleplaying the crash.\nConsequence: Usually an in-game warning, subject to official RURP rules.", max: 1 },
-      { id: 's2_q2', section: 2, sectionName: "Knowledge Questions", q: "What is RDM? Give its consequence and an example.", a: "RDM stands for Random Death Match. It occurs when a player kills or attacks another player without a valid roleplay reason.\nExample: Killing another player without a valid roleplay reason.\nConsequence: Usually an in-game warning or other moderation action, subject to official RURP rules.", max: 1 },
-      { id: 's2_q3', section: 2, sectionName: "Knowledge Questions", q: "What is FRP? Give its consequence and an example.", a: "FRP stands for Fail Roleplay. It occurs when a player performs unrealistic or impossible actions during roleplay.\nExample: Performing impossible actions that break realistic roleplay.\nConsequence: Usually an in-game warning, subject to official RURP rules.", max: 1 },
-      { id: 's2_q4', section: 2, sectionName: "Knowledge Questions", q: "What is VDM? Give its consequence and an example.", a: "VDM stands for Vehicle Death Match. It occurs when a player intentionally uses a vehicle to harm another player without valid roleplay reasoning.\nExample: Intentionally running over a stationary player without valid roleplay reasoning.\nConsequence: Usually an in-game warning or other action, subject to official RURP rules.", max: 1 },
-      { id: 's2_q5', section: 2, sectionName: "Knowledge Questions", q: "What is Cuff Rushing? Give its consequence and an example.", a: "Cuff Rushing occurs when a player handcuffs another player without proper roleplay interaction.\nExample: Running up to a suspect and immediately handcuffing them without appropriate roleplay.\nConsequence: Usually an in-game warning, subject to official RURP rules.", max: 1 },
-      { id: 's2_q6', section: 2, sectionName: "Knowledge Questions", q: "What is LTAP? Give an example and a consequence.", a: "LTAP stands for Leave to Avoid Punishment.\nExample: A player leaves the server to avoid being arrested or punished.\nConsequence: Use the consequence specified in the official RURP rules.", max: 1 },
-      { id: 's2_q7', section: 2, sectionName: "Knowledge Questions", q: "You see an admin breaking the rules. What are you going to do? Give a consequence and an example.", a: "Report the admin to higher-ranking staff and provide evidence.\nExample: Record the rule violation and send the evidence to the Owner or Director.\nConsequence: The admin may receive disciplinary action depending on the investigation.", max: 1 },
-
-      // Section 3: Meeting Assessment (Configured to 10 Max Points)
-      { id: 's3_c1', section: 3, sectionName: "Meeting Assessment", q: "Meeting Assessment: Correct spelling, punctuation, and grammar (SPaG)", a: "Trainee maintains flawless SPaG during the meeting broadcast.", max: 2 },
-      { id: 's3_c2', section: 3, sectionName: "Meeting Assessment", q: "Meeting Assessment: Uses official RURP broadcast templates (@all)", a: "Uses official RURP broadcast template correctly.", max: 3 },
-      { id: 's3_c3', section: 3, sectionName: "Meeting Assessment", q: "Meeting Assessment: Maintains control during distractions & professionalism", a: "Handles cones, smoke, and distractions professionally while preserving control.", max: 5 },
-
-      // Section 4: Driving Assessment (10 Max Points)
-      { id: 's4_c1', section: 4, sectionName: "Driving Assessment", q: "Driving Assessment: Safe and correct driving", a: "Maintains lane discipline, speed limits, and safe operational control.", max: 5 },
-      { id: 's4_c2', section: 4, sectionName: "Driving Assessment", q: "Driving Assessment: Correct use of indicators", a: "Properly signals turns and lane merges.", max: 1 },
-      { id: 's4_c3', section: 4, sectionName: "Driving Assessment", q: "Driving Assessment: Correct stopping", a: "Executes smooth, controlled stops at stop signs and traffic lights.", max: 2 },
-      { id: 's4_c4', section: 4, sectionName: "Driving Assessment", q: "Driving Assessment: Correct parking", a: "Parks neatly and accurately in designated spaces.", max: 2 },
-
-      // Section 5: Pull-Over Assessment (10 Max Points)
-      { id: 's5_c1', section: 5, sectionName: "Pull-Over Assessment", q: "Pull-Over Assessment: Correctly pulls over trainer for road violations", a: "Initiates proper emergency lights, sirens, and positioning to pull over the violator.", max: 5 },
-      { id: 's5_c2', section: 5, sectionName: "Pull-Over Assessment", q: "Pull-Over Assessment: Uses correct SPaG while communicating", a: "Communicates professionally using standard radio/chat SPaG.", max: 1 },
-      { id: 's5_c3', section: 5, sectionName: "Pull-Over Assessment", q: "Pull-Over Assessment: Understands acting as an admin/staff", a: "Demonstrates complete understanding of staff authority and protocol.", max: 1 },
-      { id: 's5_c4', section: 5, sectionName: "Pull-Over Assessment", q: "Pull-Over Assessment: Applies correct consequences", a: "Issues appropriate warning, citation, or jail penalty according to RURP guidelines.", max: 3 }
-    ];
-
-    let currentSession = null;
-    let activeQuestionIndex = 0;
-
-    // RUN LOADING SCREEN SEQUENCE ON BOOT (0-100%)
-    window.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-      initCanvas();
-      initCursor();
-      runLoadingSequence();
-    });
-
-    function runLoadingSequence() {
-      let progress = 0;
-      const bar = document.getElementById('loading-bar');
-      const pct = document.getElementById('loading-pct');
-      const status = document.getElementById('loading-status');
-      const screen = document.getElementById('loading-screen');
-
-      const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 12) + 5;
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
-          status.innerText = "SYSTEM SECURE & READY.";
-          setTimeout(() => {
-            screen.style.opacity = '0';
-            setTimeout(() => {
-              screen.classList.add('hidden');
-              checkAuthStatus();
-            }, 500);
-          }, 400);
-        }
-        bar.style.width = `${progress}%`;
-        pct.innerText = `${progress}%`;
-        if (progress > 60) status.innerText = "ESTABLISHING ENCRYPTED DATABASE...";
-        else if (progress > 30) status.innerText = "LOADING RURP QUESTION BANK...";
-      }, 50);
-    }
-
-    function checkAuthStatus() {
-      if (sessionStorage.getItem('rurp_auth') === 'true') {
-        document.getElementById('main-app').classList.remove('hidden');
-        refreshDashboard();
-      } else {
-        document.getElementById('login-screen').classList.remove('hidden');
-      }
-    }
-
-    function handleLogin(e) {
-      e.preventDefault();
-      const pwd = document.getElementById('login-password').value;
-      if (pwd === SYSTEM_PASSWORD) {
-        sessionStorage.setItem('rurp_auth', 'true');
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('main-app').classList.remove('hidden');
-        showToast("Authenticated successfully!", "success");
-        refreshDashboard();
-      } else {
-        showToast("Invalid Trainer Password!", "error");
-      }
-    }
-
-    function handleLogout() {
-      sessionStorage.removeItem('rurp_auth');
-      location.reload();
-    }
-
-    function togglePasswordVisibility() {
-      const input = document.getElementById('login-password');
-      const icon = document.getElementById('eye-icon');
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.setAttribute('data-lucide', 'eye-off');
-      } else {
-        input.type = 'password';
-        icon.setAttribute('data-lucide', 'eye');
-      }
-      lucide.createIcons();
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('bg-red-600', 'text-white');
-        btn.classList.add('text-slate-400');
-      });
-
-      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-      const activeNav = document.getElementById(`nav-${tabId}`);
-      if (activeNav) {
-        activeNav.classList.add('bg-red-600', 'text-white');
-        activeNav.classList.remove('text-slate-400');
-      }
-
-      if (tabId === 'dashboard') refreshDashboard();
-      if (tabId === 'history') renderHistoryTable();
-      if (tabId === 'screenshots') renderGlobalScreenshots();
-      if (tabId === 'question-bank') renderQuestionBank();
-    }
-
-    function getStoredSessions() {
-      return JSON.parse(localStorage.getItem('rurp_sessions') || '[]');
-    }
-
-    function saveStoredSessions(sessions) {
-      localStorage.setItem('rurp_sessions', JSON.stringify(sessions));
-    }
-
-    function handleStartTraining(e) {
-      e.preventDefault();
-      const trainee = document.getElementById('form-trainee-username').value.trim();
-      const userid = document.getElementById('form-trainee-userid').value.trim();
-      const trainer = document.getElementById('form-trainer-username').value.trim();
-      const notes = document.getElementById('form-session-notes').value.trim();
-
-      const newSession = {
-        id: 'sess_' + Date.now(),
-        trainee,
-        userid,
-        trainer,
-        notes,
-        date: new Date().toLocaleString(),
-        status: 'INCOMPLETE',
-        answers: {},
-        created: Date.now()
-      };
-
-      currentSession = newSession;
-      activeQuestionIndex = 0;
-      saveActiveSessionToDB();
-      switchTab('active-training');
-      loadWorkspaceQuestion();
-      showToast("Training session started!", "success");
-    }
-
-    function saveAsDraft() {
-      const trainee = document.getElementById('form-trainee-username').value.trim();
-      if (!trainee) {
-        showToast("Please enter Trainee username to save draft.", "error");
-        return;
-      }
-      handleStartTraining({ preventDefault: () => {} });
-      showToast("Session saved as draft.", "success");
-    }
-
-    function saveActiveSessionToDB() {
-      if (!currentSession) return;
-      const sessions = getStoredSessions();
-      const idx = sessions.findIndex(s => s.id === currentSession.id);
-      if (idx >= 0) sessions[idx] = currentSession;
-      else sessions.unshift(currentSession);
-      saveStoredSessions(sessions);
-      
-      const statusEl = document.getElementById('autosave-status');
-      if (statusEl) {
-        statusEl.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i> Saved at ${new Date().toLocaleTimeString()}`;
-        lucide.createIcons();
-      }
-    }
-
-    function loadWorkspaceQuestion() {
-      if (!currentSession) return;
-      const q = questionsDB[activeQuestionIndex];
-
-      document.getElementById('ws-section-badge').innerText = `Section ${q.section}: ${q.sectionName}`;
-      document.getElementById('ws-trainee-display').innerText = currentSession.trainee;
-      document.getElementById('ws-question-counter').innerText = `Question ${activeQuestionIndex + 1} of ${questionsDB.length}`;
-      document.getElementById('ws-section-name').innerText = q.sectionName;
-      document.getElementById('ws-progress-bar').style.width = `${((activeQuestionIndex + 1) / questionsDB.length) * 100}%`;
-
-      document.getElementById('ws-q-text').innerText = q.q;
-      document.getElementById('ws-expected-answer').innerText = q.a;
-      document.getElementById('ws-max-points').innerText = q.max;
-      document.getElementById('ws-awarded-points').max = q.max;
-
-      const ansData = currentSession.answers[q.id] || { response: '', points: 0, status: 'unmarked', screenshots: [] };
-      document.getElementById('ws-trainee-response').value = ansData.response;
-      document.getElementById('ws-awarded-points').value = ansData.points;
-      updateStatusButtons(ansData.status);
-      renderWorkspaceScreenshots(ansData.screenshots);
-    }
-
-    function saveCurrentQuestionData() {
-      if (!currentSession) return;
-      const q = questionsDB[activeQuestionIndex];
-      const response = document.getElementById('ws-trainee-response').value;
-      const points = parseFloat(document.getElementById('ws-awarded-points').value) || 0;
-      const currentAns = currentSession.answers[q.id] || { status: 'unmarked', screenshots: [] };
-
-      currentSession.answers[q.id] = {
-        response,
-        points: Math.min(points, q.max),
-        status: currentAns.status,
-        screenshots: currentAns.screenshots
-      };
-
-      saveActiveSessionToDB();
-    }
-
-    function setAnswerStatus(status) {
-      const q = questionsDB[activeQuestionIndex];
-      if (!currentSession.answers[q.id]) {
-        currentSession.answers[q.id] = { response: '', points: 0, screenshots: [] };
-      }
-      currentSession.answers[q.id].status = status;
-      
-      if (status === 'correct') {
-        currentSession.answers[q.id].points = q.max;
-        document.getElementById('ws-awarded-points').value = q.max;
-      } else if (status === 'incorrect') {
-        currentSession.answers[q.id].points = 0;
-        document.getElementById('ws-awarded-points').value = 0;
-      }
-
-      updateStatusButtons(status);
-      saveActiveSessionToDB();
-    }
-
-    function updateStatusButtons(status) {
-      ['correct', 'partial', 'incorrect'].forEach(s => {
-        const btn = document.getElementById(`btn-status-${s}`);
-        if (!btn) return;
-        if (s === status) {
-          btn.className = `flex-1 py-2.5 rounded-xl text-xs font-mono font-bold uppercase border transition ${
-            s === 'correct' ? 'bg-emerald-600/20 border-emerald-500 text-emerald-400' :
-            s === 'partial' ? 'bg-amber-600/20 border-amber-500 text-amber-400' :
-            'bg-red-600/20 border-red-500 text-red-400'
-          }`;
-        } else {
-          btn.className = "flex-1 bg-slate-900 border border-slate-700 text-slate-300 py-2.5 rounded-xl text-xs font-mono font-bold uppercase transition";
-        }
-      });
-    }
-
-    function nextQuestion() {
-      saveCurrentQuestionData();
-      if (activeQuestionIndex < questionsDB.length - 1) {
-        activeQuestionIndex++;
-        loadWorkspaceQuestion();
-      } else {
-        openReportPreview();
-      }
-    }
-
-    function prevQuestion() {
-      saveCurrentQuestionData();
-      if (activeQuestionIndex > 0) {
-        activeQuestionIndex--;
-        loadWorkspaceQuestion();
-      }
-    }
-
-    function copyQuestionText() {
-      navigator.clipboard.writeText(questionsDB[activeQuestionIndex].q);
-      showToast("Copied question successfully!", "success");
-    }
-    function copyExpectedAnswer() {
-      navigator.clipboard.writeText(questionsDB[activeQuestionIndex].a);
-      showToast("Copied expected answer successfully!", "success");
-    }
-    function copyBothText() {
-      const q = questionsDB[activeQuestionIndex];
-      navigator.clipboard.writeText(`Q: ${q.q}\nExpected Answer: ${q.a}`);
-      showToast("Copied question and answer successfully!", "success");
-    }
-
-    function handleScreenshotUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const base64Data = event.target.result;
-        const q = questionsDB[activeQuestionIndex];
-        if (!currentSession.answers[q.id]) {
-          currentSession.answers[q.id] = { response: '', points: 0, status: 'unmarked', screenshots: [] };
-        }
-        currentSession.answers[q.id].screenshots.push({
-          url: base64Data,
-          name: file.name,
-          time: new Date().toLocaleTimeString()
-        });
-
-        saveActiveSessionToDB();
-        renderWorkspaceScreenshots(currentSession.answers[q.id].screenshots);
-        showToast("Screenshot uploaded successfully!", "success");
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function renderWorkspaceScreenshots(screenshots) {
-      const container = document.getElementById('ws-screenshots-list');
-      if (!screenshots || screenshots.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-500 font-mono">No screenshots attached to this question yet.</p>`;
-        return;
-      }
-      container.innerHTML = screenshots.map((s, idx) => `
-        <div class="relative group w-20 h-20 rounded-xl overflow-hidden border border-slate-700 cursor-pointer" onclick="openLightbox('${s.url}')">
-          <img src="${s.url}" class="w-full h-full object-cover" />
-          <button onclick="event.stopPropagation(); removeScreenshot(${idx})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition"><i data-lucide="x" class="w-3 h-3"></i></button>
-        </div>
-      `).join('');
-      lucide.createIcons();
-    }
-
-    function removeScreenshot(idx) {
-      const q = questionsDB[activeQuestionIndex];
-      currentSession.answers[q.id].screenshots.splice(idx, 1);
-      saveActiveSessionToDB();
-      renderWorkspaceScreenshots(currentSession.answers[q.id].screenshots);
-    }
-
-    function openLightbox(url) {
-      document.getElementById('lightbox-img').src = url;
-      document.getElementById('lightbox-modal').classList.remove('hidden');
-    }
-    function closeLightbox() {
-      document.getElementById('lightbox-modal').classList.add('hidden');
-    }
-
-    function calculateSessionScores(session) {
-      let totalEarned = 0;
-      let totalMax = 39;
-      questionsDB.forEach(q => {
-        const ans = session.answers[q.id];
-        if (ans) totalEarned += (ans.points || 0);
-      });
-      const pct = Math.round((totalEarned / totalMax) * 100);
-      const isPass = totalEarned >= 34;
-      return { totalEarned, totalMax, pct, isPass };
-    }
-
-    function openReportPreview() {
-      saveCurrentQuestionData();
-      if (!currentSession) return;
-
-      const { totalEarned, totalMax, pct, isPass } = calculateSessionScores(currentSession);
-      const modalContent = document.getElementById('report-modal-content');
-
-      modalContent.innerHTML = `
-        <div class="space-y-4">
-          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
-            <div>
-              <p class="text-xs text-slate-400">Trainee: <strong class="text-white">${currentSession.trainee}</strong></p>
-              <p class="text-xs text-slate-400">Trainer: <strong class="text-white">${currentSession.trainer}</strong></p>
-            </div>
-            <div class="text-right">
-              <span class="text-2xl font-black ${isPass ? 'text-emerald-400' : 'text-red-500'}">${totalEarned} / ${totalMax} (${pct}%)</span>
-              <p class="text-xs font-bold uppercase ${isPass ? 'text-emerald-400' : 'text-red-500'}">${isPass ? 'PASS' : 'FAIL'}</p>
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <h4 class="text-xs uppercase text-slate-400 font-bold">Detailed Question Responses</h4>
-            ${questionsDB.map((q, i) => {
-              const ans = currentSession.answers[q.id] || { response: 'No response recorded', points: 0 };
-              return `
-                <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-xs space-y-1">
-                  <div class="flex justify-between font-bold text-slate-200">
-                    <span>Q${i+1}: ${q.q}</span>
-                    <span class="text-red-400">${ans.points} / ${q.max} pts</span>
-                  </div>
-                  <p class="text-slate-400">Response: ${ans.response || 'None'}</p>
+            <div class="gothic-glass rounded-2xl p-6 flex items-center justify-between border border-purple-500/30">
+                <div>
+                    <h2 class="text-xl font-black text-white gothic-title">Recorded Training History Vault</h2>
+                    <p class="text-xs text-yellow-400/70 mt-1">Complete archives including solved counts, individual question timers, typed answers & proof.</p>
                 </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `;
-
-      document.getElementById('report-modal').classList.remove('hidden');
-      lucide.createIcons();
-    }
-
-    function closeReportPreview() {
-      document.getElementById('report-modal').classList.add('hidden');
-    }
-
-    async function submitTrainingToDiscord() {
-      if (!currentSession) return;
-      const { totalEarned, totalMax, pct, isPass } = calculateSessionScores(currentSession);
-
-      currentSession.status = isPass ? 'PASS' : 'FAIL';
-      saveActiveSessionToDB();
-
-      const payload = {
-        content: "@here 📋 **RURP STAFF TRAINING REPORT SUBMITTED**",
-        embeds: [{
-          title: "🚨 RURP | Staff Training Assessment Results",
-          color: isPass ? 3066993 : 15158332,
-          fields: [
-            { name: "👤 Trainee Username", value: currentSession.trainee, inline: true },
-            { name: "🆔 Roblox User ID", value: currentSession.userid || "N/A", inline: true },
-            { name: "👮 Trainer Username", value: currentSession.trainer, inline: true },
-            { name: "📊 Total Score", value: `${totalEarned} / ${totalMax} (${pct}%)`, inline: true },
-            { name: "🏆 Final Outcome", value: isPass ? "✅ PASS" : "❌ FAIL", inline: true }
-          ],
-          footer: { text: "RURP Official Staff Training System • Automated Dispatch" },
-          timestamp: new Date().toISOString()
-        }]
-      };
-
-      try {
-        const res = await fetch(DISCORD_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (res.ok || res.status === 204) {
-          showToast("Report successfully sent to Discord (@here)!", "success");
-          closeReportPreview();
-          switchTab('history');
-        } else {
-          throw new Error("Webhook rejected.");
-        }
-      } catch (err) {
-        showToast("Report saved locally. Discord webhook dispatch failed.", "error");
-        closeReportPreview();
-        switchTab('history');
-      }
-    }
-
-    function refreshDashboard() {
-      const sessions = getStoredSessions();
-      let passed = 0, failed = 0, incomplete = 0, screenshotsCount = 0;
-
-      sessions.forEach(s => {
-        if (s.status === 'PASS') passed++;
-        else if (s.status === 'FAIL') failed++;
-        else incomplete++;
-
-        Object.values(s.answers || {}).forEach(ans => {
-          if (ans.screenshots) screenshotsCount += ans.screenshots.length;
-        });
-      });
-
-      document.getElementById('stat-total').innerText = sessions.length;
-      document.getElementById('stat-trainees').innerText = sessions.length;
-      document.getElementById('stat-passed').innerText = passed;
-      document.getElementById('stat-failed').innerText = failed;
-      document.getElementById('stat-incomplete').innerText = incomplete;
-      document.getElementById('stat-screenshots').innerText = screenshotsCount;
-
-      const draftsContainer = document.getElementById('dashboard-drafts');
-      const drafts = sessions.filter(s => s.status === 'INCOMPLETE');
-      if (drafts.length === 0) {
-        draftsContainer.innerHTML = `<p class="text-xs text-slate-500 font-mono">No draft sessions found.</p>`;
-      } else {
-        draftsContainer.innerHTML = drafts.slice(0, 3).map(d => `
-          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs font-mono">
-            <div>
-              <strong class="text-white">${d.trainee}</strong>
-              <span class="text-slate-400 block">${d.date}</span>
+                <button onclick="clearHistory(); playSfx('click');" class="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/40 text-xs font-bold transition gothic-title">
+                    <i class="fa-solid fa-trash"></i> Clear All History
+                </button>
             </div>
-            <button onclick="resumeSession('${d.id}')" class="bg-red-600 text-white px-3 py-1.5 rounded-lg">Continue</button>
-          </div>
-        `).join('');
-      }
+            <div id="history-list-render" class="grid gap-6"></div>
+        </div>
 
-      const recentContainer = document.getElementById('dashboard-recent');
-      if (sessions.length === 0) {
-        recentContainer.innerHTML = `<p class="text-xs text-slate-500 font-mono">No recent training logs.</p>`;
-      } else {
-        recentContainer.innerHTML = sessions.slice(0, 3).map(s => `
-          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs font-mono">
-            <div>
-              <strong class="text-white">${s.trainee}</strong>
-              <span class="text-slate-400 block">Trainer: ${s.trainer}</span>
+        <!-- TAB 4: ADMIN PANEL -->
+        <div id="tab-admin" class="hidden space-y-6">
+            <div class="gothic-glass rounded-3xl p-8 space-y-6 border border-purple-500/30">
+                <div class="flex items-center justify-between border-b border-purple-500/30 pb-4">
+                    <div>
+                        <h2 class="text-xl font-black text-white flex items-center gap-2 gothic-title">
+                            <i class="fa-solid fa-crown text-yellow-400"></i> Supreme Admin Panel
+                        </h2>
+                        <p class="text-xs text-yellow-400/70 mt-1">Manage registered users, inspect time spent, and monitor staff training statistics.</p>
+                    </div>
+                    <span class="text-xs bg-yellow-400/20 text-yellow-300 px-3 py-1.5 rounded-xl font-bold border border-yellow-400/40 gothic-title">Owner Access: m4x_678</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="gothic-glass p-5 rounded-2xl border border-purple-500/30 space-y-1">
+                        <div class="text-xs text-yellow-400/70 font-bold uppercase gothic-title">Total Registered Users</div>
+                        <div id="admin-total-users" class="text-2xl font-black text-white code-font">0</div>
+                    </div>
+                    <div class="gothic-glass p-5 rounded-2xl border border-purple-500/30 space-y-1">
+                        <div class="text-xs text-yellow-400/70 font-bold uppercase gothic-title">Total Trainings Logged</div>
+                        <div id="admin-total-trainings" class="text-2xl font-black text-white code-font">0</div>
+                    </div>
+                    <div class="gothic-glass p-5 rounded-2xl border border-purple-500/30 space-y-1">
+                        <div class="text-xs text-yellow-400/70 font-bold uppercase gothic-title">System Status</div>
+                        <div class="text-2xl font-black text-emerald-400 code-font">Online</div>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <h3 class="text-sm font-black text-yellow-400 uppercase tracking-wider gothic-title">Registered Staff Accounts Database</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-purple-200 border-collapse">
+                            <thead>
+                                <tr class="bg-purple-950 text-yellow-400 border-b border-purple-500/30 gothic-title">
+                                    <th class="p-3">Discord Username</th>
+                                    <th class="p-3">Roblox Username</th>
+                                    <th class="p-3">Role Status</th>
+                                    <th class="p-3">Total Time Active</th>
+                                    <th class="p-3">Trainings Conducted</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-table"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <span class="px-2.5 py-1 rounded-full font-bold ${s.status === 'PASS' ? 'bg-emerald-950 text-emerald-400' : s.status === 'FAIL' ? 'bg-red-950 text-red-400' : 'bg-amber-950 text-amber-400'}">${s.status}</span>
-          </div>
-        `).join('');
-      }
-    }
-
-    function resumeSession(id) {
-      const sessions = getStoredSessions();
-      const sess = sessions.find(s => s.id === id);
-      if (sess) {
-        currentSession = sess;
-        activeQuestionIndex = 0;
-        switchTab('active-training');
-        loadWorkspaceQuestion();
-        showToast("Resumed training session.", "success");
-      }
-    }
-
-    function renderHistoryTable() {
-      const sessions = getStoredSessions();
-      const search = document.getElementById('filter-search').value.toLowerCase();
-      const statusFilter = document.getElementById('filter-status').value;
-      const tbody = document.getElementById('history-table-rows');
-
-      const filtered = sessions.filter(s => {
-        const matchesSearch = s.trainee.toLowerCase().includes(search) || s.trainer.toLowerCase().includes(search);
-        const matchesStatus = statusFilter === 'ALL' || s.status === statusFilter;
-        return matchesSearch && matchesStatus;
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-500 font-mono">No matching training records found.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(s => {
-        const { totalEarned, totalMax, pct } = calculateSessionScores(s);
-        return `
-          <tr class="hover:bg-slate-900/50 font-mono text-xs">
-            <td class="p-4 text-slate-400">${s.date}</td>
-            <td class="p-4 font-bold text-white">${s.trainee}</td>
-            <td class="p-4 text-slate-300">${s.trainer}</td>
-            <td class="p-4">${totalEarned} / ${totalMax}</td>
-            <td class="p-4">${pct}%</td>
-            <td class="p-4"><span class="px-2 py-0.5 rounded-full font-bold ${s.status === 'PASS' ? 'bg-emerald-950 text-emerald-400' : s.status === 'FAIL' ? 'bg-red-950 text-red-400' : 'bg-amber-950 text-amber-400'}">${s.status}</span></td>
-            <td class="p-4 text-emerald-400">DISPATCHED</td>
-            <td class="p-4 text-right">
-              <button onclick="resumeSession('${s.id}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1 rounded">View / Edit</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function renderGlobalScreenshots() {
-      const sessions = getStoredSessions();
-      const container = document.getElementById('global-screenshots-grid');
-      let allShots = [];
-
-      sessions.forEach(s => {
-        Object.values(s.answers || {}).forEach(ans => {
-          if (ans.screenshots) {
-            ans.screenshots.forEach(sc => allShots.push({ ...sc, trainee: s.trainee }));
-          }
-        });
-      });
-
-      if (allShots.length === 0) {
-        container.innerHTML = `<p class="text-sm text-slate-500 font-mono">No screenshots uploaded yet.</p>`;
-        return;
-      }
-
-      container.innerHTML = allShots.map(s => `
-        <div class="glass-card rounded-xl overflow-hidden border border-slate-800 cursor-pointer" onclick="openLightbox('${s.url}')">
-          <img src="${s.url}" class="w-full h-40 object-cover" />
-          <div class="p-3 text-xs font-mono flex justify-between items-center bg-slate-900">
-            <span class="text-white font-bold">${s.trainee}</span>
-            <span class="text-slate-500">${s.time}</span>
-          </div>
         </div>
-      `).join('');
-    }
 
-    function renderQuestionBank() {
-      const container = document.getElementById('question-bank-container');
-      container.innerHTML = questionsDB.map((q, i) => `
-        <div class="glass-card p-4 rounded-xl space-y-2 font-mono text-xs">
-          <div class="flex justify-between text-red-400 font-bold">
-            <span>Question ${i + 1} (Section ${q.section}: ${q.sectionName})</span>
-            <span>Max Points: ${q.max}</span>
-          </div>
-          <p class="text-sm font-semibold text-white">${q.q}</p>
-          <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-slate-300 whitespace-pre-wrap">
-            <span class="text-slate-500 block mb-1">Expected Answer:</span>${q.a}
-          </div>
+        <!-- TAB 5: SETTINGS -->
+        <div id="tab-settings" class="hidden space-y-6">
+            <div class="gothic-glass rounded-3xl p-8 max-w-xl mx-auto space-y-6 border border-purple-500/30">
+                <div>
+                    <h2 class="text-xl font-black text-white gothic-title">Hub Settings</h2>
+                    <p class="text-xs text-yellow-400/70 mt-1">Manage session credentials and security configuration.</p>
+                </div>
+
+                <div class="space-y-4 pt-2 border-t border-purple-500/30">
+                    <div class="gothic-card p-4 rounded-2xl flex items-center justify-between border border-purple-500/30">
+                        <div>
+                            <div class="text-sm font-bold text-white gothic-title" id="settings-username-display">-</div>
+                            <div class="text-xs text-yellow-400/70 code-font" id="settings-role-display">-</div>
+                        </div>
+                        <button onclick="handleLogout()" class="px-5 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/40 font-bold text-xs transition flex items-center gap-2 gothic-title">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      `).join('');
-    }
 
-    function saveSettings() {
-      showToast("Settings saved successfully!", "success");
-    }
+    </main>
 
-    async function testWebhook() {
-      try {
-        const res = await fetch(DISCORD_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: "@here 🔔 **RURP STAFF TRAINER PRO** — Webhook connection test successful!" })
-        });
-        if (res.ok || res.status === 204) {
-          showToast("Webhook test successful (@here ping sent)!", "success");
-        } else {
-          throw new Error();
+    <footer class="border-t border-purple-500/30 gothic-glass py-5 text-center text-xs text-yellow-400/60 z-10 gothic-title">
+        RURP Realistic Union RolePlay • Emergency Hamburg Edition
+    </footer>
+
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-purple-950 border border-yellow-400/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-xs sm:text-sm font-bold pointer-events-none gothic-title">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
+        <span id="toast-msg">Action Completed</span>
+    </div>
+
+    <script>
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1564935972863479891/bIkFfdn8pqhyy6VjXLiBWE7XbODNE9QJRFbkYt2JAuBYX3dcchAjePHO-3CzoctouOVV";
+
+        const DEFAULT_USERS = [
+            { discord: "m4x_678", roblox: "m4x_678", password: "16082012@A", role: "Owner", activeSeconds: 0, trainingsCount: 0 }
+        ];
+
+        let users = JSON.parse(localStorage.getItem('rurp_gothic_users_db') || JSON.stringify(DEFAULT_USERS));
+        let currentUser = JSON.parse(localStorage.getItem('rurp_gothic_current_session') || 'null');
+
+        const QUESTIONS = [
+            { id: 1, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command can you use to spawn yourself an admin vehicle?", purpose: "To test if the trainee knows how to spawn emergency or admin vehicles.", marking: "Correct (:vehicle spawnadmin) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :vehicle spawnadmin [vehicle_name]" },
+            { id: 2, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "Which command would you use to remove a disruptive player from the server temporarily?", purpose: "Ensures staff know how to eject rule-breakers temporarily.", marking: "Correct (:kick [player] [reason]) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :kick [player] [reason]" },
+            { id: 3, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command allows you to permanently remove a player from the server?", purpose: "Validates knowledge of permanent ban commands for severe infractions.", marking: "Correct (:ban [player] [reason]) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :ban [player] [reason]" },
+            { id: 4, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "Which command allows you to teleport yourself to another player?", purpose: "Required for fast travel to investigate player reports.", marking: "Correct (:tp [player] or :to [player]) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :tp [player]" },
+            { id: 5, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command can you use to stop a player from moving if they are disrupting RP?", purpose: "Essential moderation tool to freeze chaotic or trolling players.", marking: "Correct (:freeze [player]) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :freeze [player]" },
+            { id: 6, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command can you use to make yourself fly?", purpose: "Enables aerial observation and supervision of map areas.", marking: "Correct (:fly) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :fly" },
+            { id: 7, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "Which command would you use to change the time of day for roleplay purposes?", purpose: "Allows staff to manage lighting and time for roleplay scenarios.", marking: "Correct (:time [hour]) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :time [hour]" },
+            { id: 8, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command can be used to change the weather conditions in the server?", purpose: "Used to simulate rain or clear weather during events.", marking: "Correct (:weather [condition]) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :weather [condition]" },
+            { id: 9, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command would you use to clear all spawned vehicles or objects?", purpose: "Cleans up lag-inducing abandoned cars and props from roads.", marking: "Correct (:clean or :clear) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :clean or :clear" },
+            { id: 10, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "Which command is used to reset or respawn a player during a scenario?", purpose: "Helps unbug stuck players or reset characters in active incidents.", marking: "Correct (:respawn [player]) = 1.0 Pt. Incorrect = 0 Pt.", guide: "Expected Command: :respawn [player]" },
+
+            { id: 11, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is MCRP? Give its consequence and an example.", purpose: "Tests understanding of Missing Crash Roleplay.", marking: "Correct definition + consequence + example = 1.0 Pt. Partial = 0.5 Pt.", guide: "Missing Crash RP. Consequence: Warning. Ex: Crashing into a wall and driving away without RP." },
+            { id: 12, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is RDM? Give its consequence and an example.", purpose: "Evaluates ability to recognize Random Death Match violations.", marking: "Correct definition + consequence + example = 1.0 Pt. Partial = 0.5 Pt.", guide: "Random Death Match. Consequence: Warning / Kick. Ex: Killing players without RP reason." },
+            { id: 13, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is FRP? Give its consequence and an example.", purpose: "Checks knowledge of Fail Roleplay standards.", marking: "Correct definition + consequence + example = 1.0 Pt. Partial = 0.5 Pt.", guide: "Fail Roleplay. Consequence: Warning. Ex: Unrealistic actions like driving off cliffs uninjured." },
+            { id: 14, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is VDM? Give its consequence and an example.", purpose: "Ensures trainee can identify Vehicle Death Match offenses.", marking: "Correct definition + consequence + example = 1.0 Pt. Partial = 0.5 Pt.", guide: "Vehicle Death Match. Consequence: Warning / Kick. Ex: Intentionally ramming players with cars." },
+            { id: 15, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is Cuff Rushing? Give its consequence and an example.", purpose: "Verifies knowledge regarding cuffing rules without RP interaction.", marking: "Correct definition + consequence + example = 1.0 Pt. Partial = 0.5 Pt.", guide: "Cuffing without RP setup. Consequence: Warning. Ex: Running up to suspects and cuffing instantly." },
+            { id: 16, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is LTAP? Give an example and a consequence.", purpose: "Tests handling of players leaving to avoid punishment.", marking: "Correct definition + consequence + example = 1.0 Pt. Partial = 0.5 Pt.", guide: "Leaving To Avoid Punishment. Consequence: Ban. Ex: Disconnecting right after getting pulled over." },
+            { id: 17, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "You see an admin breaking the rules, what are you going to do? Give a consequence and an example.", purpose: "Ensures staff know the correct escalation chain for corrupt staff.", marking: "Recording proof and reporting to HR/Owner = 1.0 Pt.", guide: "Record proof and send to HR/Owner. Consequence: Demotion/Strike." },
+            { id: 18, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What are you going to do if someone skips the border? Give a consequence.", purpose: "Verifies protocol for border-skipping infractions.", marking: "Kick for border skipping & Fail RP = 1.0 Pt.", guide: "Kick them for skipping border. Consequence: Kick." },
+            { id: 19, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "How often should you broadcast as an admin?", purpose: "Checks knowledge of server announcement intervals.", marking: "Around every 5-10 minutes = 1.0 Pt.", guide: "Around 5-10 minutes." },
+            { id: 20, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "In what circumstance can you permanently ban someone?", purpose: "Tests knowledge of zero-tolerance permanent ban offenses.", marking: "2 correct out of 4 (NSFW, Exploiting, Filter Bypass, Advertising) = 1.0 Pt.", guide: "NSFW, Exploiting, Bypassing Roblox Filter, Advertising servers." },
+
+            { id: 21, sec: 3, secTitle: "Section 3 – Meeting Scenario", max: 10, text: "Host Meeting Scenario (@all broadcast, SPaG, Control & Professionalism)", purpose: "Evaluates broadcast template usage, SPaG, maintaining control when trainer spawns smoke/cones.", marking: "SPaG = 1 Pt, Template = 2 Pts, Control & Professionalism = 7 Pts.", guide: "Trainee broadcasts @all. Trainer spawns distractions (smoke/cones). Trainee must handle calmly." },
+            { id: 22, sec: 4, secTitle: "Section 4 – Driving Assessment & Traffic Pullovers", max: 20, text: "Full Driving & Pullover Scenario Execution (Safe driving, blinkers, stopping, drunk driver, wrong side, speeding & consequences)", purpose: "Evaluates overall driving capabilities combined with traffic enforcement pullovers.", marking: "Driving Skills = 10 Pts (Blinkers 1, Stop 2, Park 2, Perfect Drive 5). Pullovers & Consequences = 10 Pts.", guide: "Trainer acts like drunk driver, drives on wrong side, speeds. Trainee must pull trainer over, maintain SPaG, and assign correct tickets/warnings." }
+        ];
+
+        let currentStep = 0;
+        let traineeName = "";
+        let trainerName = "";
+        let scores = {};
+        let typedAnswers = {};
+        let screenshots = {};
+        let spagPenalties = {};
+        let qTimeElapsed = {};
+        let overallSeconds = 0;
+        let overallTimerInterval = null;
+        let qTimerInterval = null;
+        let userActiveTimer = null;
+
+        // Native Audio Synthesizer (SFX Engine)
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
         }
-      } catch (err) {
-        showToast("Webhook test failed.", "error");
-      }
-    }
 
-    function showToast(msg, type = "info") {
-      const toast = document.createElement('div');
-      toast.className = `glass-panel px-4 py-3 rounded-xl border flex items-center gap-3 shadow-xl transition-all font-mono text-xs ${
-        type === 'success' ? 'border-emerald-500 text-emerald-400' : 'border-red-500 text-red-400'
-      }`;
-      toast.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" class="w-4 h-4"></i> ${msg}`;
-      document.getElementById('toast-container').appendChild(toast);
-      lucide.createIcons();
-      setTimeout(() => toast.remove(), 3000);
-    }
+        function playSfx(type) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
 
-    function initCursor() {
-      const cursor = document.getElementById('cursor');
-      const dot = document.getElementById('cursor-dot');
-      document.addEventListener('mousemove', (e) => {
-        cursor.style.left = `${e.clientX}px`;
-        cursor.style.top = `${e.clientY}px`;
-        dot.style.left = `${e.clientX}px`;
-        dot.style.top = `${e.clientY}px`;
-      });
-    }
+                const now = ctx.currentTime;
 
-    function initCanvas() {
-      const canvas = document.getElementById('bg-canvas');
-      const ctx = canvas.getContext('2d');
-      let particles = [];
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now); // D5
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.06); // A5
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+                    osc.start(now);
+                    osc.stop(now + 0.06);
+                } else if (type === 'score') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now); // A4
+                    osc.frequency.setValueAtTime(659.25, now + 0.05); // E5
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                    osc.start(now);
+                    osc.stop(now + 0.12);
+                } else if (type === 'finish') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                }
+            } catch (e) {
+                // Audio fallback if user hasn't interacted
+            }
+        }
 
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resize);
-      resize();
+        window.onload = () => {
+            checkAuthSession();
+            renderQuestionBank();
+            loadHistoryLogs();
+            initPurpleGoldBackground();
+            initCursorEffect();
+        };
 
-      for (let i = 0; i < 45; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 2 + 0.8,
-          vx: (Math.random() - 0.5) * 0.25,
-          vy: (Math.random() - 0.5) * 0.25,
-          alpha: Math.random() * 0.5 + 0.1
-        });
-      }
+        function checkAuthSession() {
+            if (currentUser) {
+                document.getElementById('auth-overlay').classList.add('hidden');
+                document.getElementById('settings-username-display').innerText = currentUser.discord;
+                document.getElementById('settings-role-display').innerText = `Role: ${currentUser.role} | Roblox: ${currentUser.roblox}`;
+                
+                if (currentUser.discord === "m4x_678" || currentUser.role === "Owner") {
+                    document.getElementById('tab-btn-admin').classList.remove('hidden');
+                    document.getElementById('role-badge').innerText = "OWNER";
+                    loadAdminPanel();
+                } else {
+                    document.getElementById('role-badge').innerText = "STAFF";
+                }
+                startUserActivityTimer();
+            } else {
+                document.getElementById('auth-overlay').classList.remove('hidden');
+            }
+        }
 
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(220, 38, 38, ${p.alpha})`;
-          ctx.fill();
-        });
-        requestAnimationFrame(animate);
-      }
-      animate();
-    }
-  </script>
+        function toggleAuthMode(mode) {
+            if (mode === 'register') {
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('register-form').classList.remove('hidden');
+                document.getElementById('auth-subtitle').innerText = "Register your Cathedral credentials";
+            } else {
+                document.getElementById('register-form').classList.add('hidden');
+                document.getElementById('login-form').classList.remove('hidden');
+                document.getElementById('auth-subtitle').innerText = "Enter credentials to breach the cathedral gates";
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const discord = document.getElementById('reg-discord').value.trim();
+            const roblox = document.getElementById('reg-roblox').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+
+            if (users.some(u => u.discord.toLowerCase() === discord.toLowerCase())) {
+                showToast("Discord username already registered!");
+                return;
+            }
+
+            const newUser = {
+                discord,
+                roblox,
+                password,
+                role: discord === "m4x_678" ? "Owner" : "Staff",
+                activeSeconds: 0,
+                trainingsCount: 0
+            };
+
+            users.push(newUser);
+            localStorage.setItem('rurp_gothic_users_db', JSON.stringify(users));
+            
+            currentUser = newUser;
+            localStorage.setItem('rurp_gothic_current_session', JSON.stringify(currentUser));
+            
+            showToast(`Welcome to RURP Hub, ${discord}!`);
+            checkAuthSession();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const discord = document.getElementById('login-discord').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            const found = users.find(u => u.discord.toLowerCase() === discord.toLowerCase() && u.password === password);
+            if (found) {
+                currentUser = found;
+                localStorage.setItem('rurp_gothic_current_session', JSON.stringify(currentUser));
+                showToast(`Welcome back, ${currentUser.discord}!`);
+                checkAuthSession();
+            } else {
+                showToast("Invalid credentials or unregistered user.");
+            }
+        }
+
+        function handleLogout() {
+            playSfx('click');
+            currentUser = null;
+            localStorage.removeItem('rurp_gothic_current_session');
+            if (userActiveTimer) clearInterval(userActiveTimer);
+            showToast("Logged out successfully.");
+            location.reload();
+        }
+
+        function startUserActivityTimer() {
+            if (userActiveTimer) clearInterval(userActiveTimer);
+            userActiveTimer = setInterval(() => {
+                if (currentUser) {
+                    currentUser.activeSeconds = (currentUser.activeSeconds || 0) + 1;
+                    let idx = users.findIndex(u => u.discord === currentUser.discord);
+                    if (idx !== -1) {
+                        users[idx].activeSeconds = currentUser.activeSeconds;
+                        localStorage.setItem('rurp_gothic_users_db', JSON.stringify(users));
+                        localStorage.setItem('rurp_gothic_current_session', JSON.stringify(currentUser));
+                    }
+                }
+            }, 1000);
+        }
+
+        function loadAdminPanel() {
+            let totalTrainings = 0;
+            let history = JSON.parse(localStorage.getItem('rurp_gothic_history') || '[]');
+            totalTrainings = history.length;
+
+            document.getElementById('admin-total-users').innerText = users.length;
+            document.getElementById('admin-total-trainings').innerText = totalTrainings;
+
+            const tbody = document.getElementById('admin-users-table');
+            tbody.innerHTML = users.map(u => {
+                let mins = Math.floor((u.activeSeconds || 0) / 60);
+                let secs = (u.activeSeconds || 0) % 60;
+                let timeStr = `${mins}m ${secs}s`;
+                return `
+                    <tr class="border-b border-purple-500/10 hover:bg-purple-900/30">
+                        <td class="p-3 font-bold text-white">${u.discord}</td>
+                        <td class="p-3 text-yellow-300/80">${u.roblox || '-'}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.role === 'Owner' ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/40' : 'bg-purple-800 text-purple-200'}">${u.role}</span></td>
+                        <td class="p-3 code-font text-yellow-300">${timeStr}</td>
+                        <td class="p-3 code-font font-bold">${u.trainingsCount || 0}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function switchTab(tabId) {
+            playSfx('click');
+            ['eval', 'bank', 'history', 'admin', 'settings'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if (el) el.classList.add('hidden');
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (btn) btn.className = "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title";
+            });
+            const targetEl = document.getElementById(`tab-${tabId}`);
+            if (targetEl) targetEl.classList.remove('hidden');
+            const targetBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (targetBtn) {
+                targetBtn.className = tabId === 'admin' 
+                    ? "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-yellow-400 hover:text-white transition-all flex items-center gap-2 bg-purple-500/20 border border-yellow-400/40 gothic-title"
+                    : "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-950 shadow-lg shadow-yellow-500/20 gothic-title";
+            }
+            if (tabId === 'admin') loadAdminPanel();
+        }
+
+        function startSession(e) {
+            e.preventDefault();
+            traineeName = document.getElementById('setup-trainee').value.trim();
+            trainerName = document.getElementById('setup-trainer').value.trim();
+
+            if(!traineeName || !trainerName) return;
+
+            scores = {};
+            typedAnswers = {};
+            screenshots = {};
+            spagPenalties = {};
+            qTimeElapsed = {};
+            QUESTIONS.forEach(q => {
+                scores[q.id] = 0;
+                typedAnswers[q.id] = "";
+                screenshots[q.id] = "";
+                qTimeElapsed[q.id] = 0;
+            });
+
+            currentStep = 0;
+            overallSeconds = 0;
+
+            document.getElementById('display-trainee-name').innerText = traineeName;
+            document.getElementById('display-trainer-name').innerText = trainerName;
+            document.getElementById('embed-trainee').innerText = traineeName;
+            document.getElementById('embed-trainer').innerText = trainerName;
+
+            document.getElementById('setup-card').classList.add('hidden');
+            document.getElementById('active-session').classList.remove('hidden');
+
+            if(overallTimerInterval) clearInterval(overallTimerInterval);
+            overallTimerInterval = setInterval(() => {
+                overallSeconds++;
+                const mins = String(Math.floor(overallSeconds / 60)).padStart(2, '0');
+                const secs = String(overallSeconds % 60).padStart(2, '0');
+                document.getElementById('session-timer').innerText = `Total ${mins}:${secs}`;
+            }, 1000);
+
+            startQuestionTimer();
+            renderCurrentQuestion();
+            updateGlobalScores();
+            showToast("Training session initialized!");
+        }
+
+        function startQuestionTimer() {
+            if(qTimerInterval) clearInterval(qTimerInterval);
+            const qId = QUESTIONS[currentStep].id;
+
+            qTimerInterval = setInterval(() => {
+                qTimeElapsed[qId] = (qTimeElapsed[qId] || 0) + 1;
+                const m = String(Math.floor(qTimeElapsed[qId] / 60)).padStart(2, '0');
+                const s = String(qTimeElapsed[qId] % 60).padStart(2, '0');
+                const timerEl = document.getElementById('q-timer-display');
+                if(timerEl) timerEl.innerText = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function renderCurrentQuestion() {
+            const q = QUESTIONS[currentStep];
+
+            document.getElementById('current-step-label').innerText = `Question ${currentStep + 1} of ${QUESTIONS.length}`;
+            const percent = Math.round(((currentStep + 1) / QUESTIONS.length) * 100);
+            document.getElementById('overall-percent').innerText = `${percent}% Done`;
+            document.getElementById('progress-bar-fill').style.width = `${percent}%`;
+
+            document.getElementById('q-category-tag').innerText = q.secTitle;
+            document.getElementById('q-weight-tag').innerText = `Max Points: ${q.max} Pt${q.max > 1 ? 's' : ''}`;
+            document.getElementById('q-prompt-text').innerText = q.text;
+            document.getElementById('q-answer-guide').innerHTML = `<strong>Purpose:</strong> ${q.purpose}<br><br><strong>Expected:</strong> ${q.guide}`;
+            document.getElementById('q-marking-reason').innerText = q.marking;
+
+            const curTime = qTimeElapsed[q.id] || 0;
+            const m = String(Math.floor(curTime / 60)).padStart(2, '0');
+            const s = String(curTime % 60).padStart(2, '0');
+            document.getElementById('q-timer-display').innerText = `${m}:${s}`;
+
+            document.getElementById('trainee-answer-input').value = typedAnswers[q.id] || "";
+
+            const imgData = screenshots[q.id];
+            const thumbContainer = document.getElementById('screenshot-thumbnail-container');
+            const thumbImg = document.getElementById('screenshot-thumbnail');
+            const thumbBadge = document.getElementById('screenshot-preview-badge');
+
+            if(imgData) {
+                thumbImg.src = imgData;
+                thumbContainer.classList.remove('hidden');
+                thumbBadge.innerText = "Screenshot attached!";
+                thumbBadge.className = "text-xs text-yellow-300 font-bold";
+            } else {
+                thumbContainer.classList.add('hidden');
+                thumbBadge.innerText = "No image attached";
+                thumbBadge.className = "text-xs text-purple-400 italic";
+            }
+
+            const isPenalized = spagPenalties[q.id] || false;
+            const spagBtn = document.getElementById('spag-btn');
+            spagBtn.className = isPenalized 
+                ? "px-3 py-2 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40 transition flex items-center gap-1.5 shadow-md gothic-title" 
+                : "px-3 py-2 rounded-xl text-xs font-bold bg-purple-950 text-purple-300/70 hover:text-rose-400 border border-purple-500/30 transition flex items-center gap-1.5 gothic-title";
+
+            const btnContainer = document.getElementById('scoring-buttons-container');
+            btnContainer.innerHTML = '';
+            const currentScore = scores[q.id] || 0;
+
+            if(q.max === 1) {
+                const options = [
+                    { label: 'Correct (+1.0 Pt)', score: 1, color: 'emerald' },
+                    { label: 'Partial (+0.5 Pt)', score: 0.5, color: 'amber' },
+                    { label: 'Incorrect (0.0 Pt)', score: 0, color: 'rose' }
+                ];
+
+                options.forEach(opt => {
+                    const active = (currentScore === opt.score);
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.onclick = () => { playSfx('score'); setScore(q.id, opt.score); };
+                    btn.className = `py-3.5 px-4 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 gothic-title ${
+                        active 
+                        ? `bg-${opt.color}-500 text-purple-950 shadow-lg shadow-${opt.color}-500/30 ring-2 ring-white scale-[1.02]` 
+                        : `bg-purple-950/80 hover:bg-purple-900 text-purple-200 border border-purple-500/30`
+                    }`;
+                    btn.innerHTML = active ? `<i class="fa-solid fa-circle-check"></i> ${opt.label}` : opt.label;
+                    btnContainer.appendChild(btn);
+                });
+            } else {
+                const stepVal = q.max <= 10 ? 1 : 2;
+                for(let val = 0; val <= q.max; val += stepVal) {
+                    const active = (currentScore === val);
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.onclick = () => { playSfx('score'); setScore(q.id, val); };
+                    btn.className = `py-3.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center gothic-title ${
+                        active 
+                        ? `bg-yellow-400 text-purple-950 shadow-lg shadow-yellow-400/30 ring-2 ring-white scale-[1.02]` 
+                        : `bg-purple-950/80 hover:bg-purple-900 text-purple-200 border border-purple-500/30`
+                    }`;
+                    btn.innerText = `${val} Pts`;
+                    btnContainer.appendChild(btn);
+                }
+            }
+
+            document.getElementById('prev-btn').disabled = (currentStep === 0);
+            if(currentStep === QUESTIONS.length - 1) {
+                document.getElementById('next-btn').innerHTML = `Complete Exam <i class="fa-solid fa-flag-checkered"></i>`;
+                document.getElementById('next-btn').className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-purple-950 font-black text-xs sm:text-sm transition shadow-lg shadow-emerald-500/25 flex items-center gap-2 gothic-title border border-yellow-200";
+            } else {
+                document.getElementById('next-btn').innerHTML = `Next Question <i class="fa-solid fa-arrow-right"></i>`;
+                document.getElementById('next-btn').className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black text-xs sm:text-sm transition shadow-lg shadow-yellow-400/20 flex items-center gap-2 gothic-title border border-yellow-200";
+            }
+        }
+
+        function saveCurrentAnswerText() {
+            const qId = QUESTIONS[currentStep].id;
+            typedAnswers[qId] = document.getElementById('trainee-answer-input').value;
+        }
+
+        function handleScreenshotUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const qId = QUESTIONS[currentStep].id;
+                screenshots[qId] = e.target.result;
+                renderCurrentQuestion();
+                showToast("Screenshot proof attached!");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setScore(qId, val) {
+            const isPenalized = spagPenalties[qId] || false;
+            const finalVal = Math.max(0, isPenalized ? val - 0.5 : val);
+            scores[qId] = finalVal;
+            renderCurrentQuestion();
+            updateGlobalScores();
+        }
+
+        function toggleSpag() {
+            const qId = QUESTIONS[currentStep].id;
+            spagPenalties[qId] = !spagPenalties[qId];
+            const currentScore = scores[qId] || 0;
+            setScore(qId, currentScore);
+        }
+
+        function nextQuestion() {
+            saveCurrentAnswerText();
+            if(currentStep < QUESTIONS.length - 1) {
+                currentStep++;
+                startQuestionTimer();
+                renderCurrentQuestion();
+            } else {
+                playSfx('finish');
+                showToast("Exam completed! Review summary.");
+                document.getElementById('completion-summary-panel').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function prevQuestion() {
+            saveCurrentAnswerText();
+            if(currentStep > 0) {
+                currentStep--;
+                startQuestionTimer();
+                renderCurrentQuestion();
+            }
+        }
+
+        function copyQuestionForRoblox() {
+            const q = QUESTIONS[currentStep];
+            const chatText = `[Staff Exam Q${currentStep+1}] ${q.text}`;
+            navigator.clipboard.writeText(chatText);
+            showToast("Copied question for Roblox chat!");
+        }
+
+        function updateGlobalScores() {
+            let secTotals = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            QUESTIONS.forEach(q => secTotals[q.sec] += (scores[q.id] || 0));
+
+            const grandTotal = Object.values(secTotals).reduce((a, b) => a + b, 0);
+            document.getElementById('live-score').innerText = grandTotal.toFixed(1);
+
+            const isPass = grandTotal >= 42.5;
+
+            const badge = document.getElementById('status-badge');
+            if(isPass) {
+                badge.className = "px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-xs font-extrabold flex items-center gap-2 shadow-lg gothic-glow";
+                badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> PASS (${grandTotal.toFixed(1)}/50)`;
+            } else {
+                badge.className = "px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/40 text-rose-400 text-xs font-extrabold flex items-center gap-2 shadow-lg";
+                badge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> FAIL (${grandTotal.toFixed(1)}/50)`;
+            }
+
+            document.getElementById('embed-score').innerText = `${grandTotal.toFixed(1)} / 50 Pts (${Math.round((grandTotal/50)*100)}%)`;
+            document.getElementById('embed-sec-1').innerText = `${secTotals[1].toFixed(1)}/10`;
+            document.getElementById('embed-sec-2').innerText = `${secTotals[2].toFixed(1)}/10`;
+            document.getElementById('embed-sec-3').innerText = `${secTotals[3].toFixed(1)}/10`;
+            document.getElementById('embed-sec-4').innerText = `${secTotals[4].toFixed(1)}/20`;
+
+            const embedBorder = document.getElementById('discord-embed-border');
+            const embedTag = document.getElementById('embed-status-tag');
+            if(isPass) {
+                embedBorder.style.borderColor = "#10b981";
+                embedTag.className = "text-xs font-extrabold px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400";
+                embedTag.innerText = "PASSED";
+            } else {
+                embedBorder.style.borderColor = "#ef4444";
+                embedTag.className = "text-xs font-extrabold px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-400";
+                embedTag.innerText = "FAILED";
+            }
+        }
+
+        async function submitToWebhook() {
+            playSfx('click');
+            saveCurrentAnswerText();
+            let secTotals = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            QUESTIONS.forEach(q => secTotals[q.sec] += (scores[q.id] || 0));
+            const grandTotal = Object.values(secTotals).reduce((a, b) => a + b, 0);
+            const isPass = grandTotal >= 42.5;
+            const cuteNote = document.getElementById('trainer-notes').value.trim() || "Magnificent mastery of rules!";
+
+            let solvedCount = 0;
+            QUESTIONS.forEach(q => { if((scores[q.id] || 0) > 0) solvedCount++; });
+
+            if (currentUser) {
+                let uIdx = users.findIndex(u => u.discord === currentUser.discord);
+                if (uIdx !== -1) {
+                    users[uIdx].trainingsCount = (users[uIdx].trainingsCount || 0) + 1;
+                    localStorage.setItem('rurp_gothic_users_db', JSON.stringify(users));
+                }
+            }
+
+            const record = {
+                conductedBy: currentUser ? currentUser.discord : "Unknown",
+                traineeName,
+                trainerName,
+                grandTotal,
+                isPass,
+                secTotals,
+                solvedCount,
+                totalQuestions: QUESTIONS.length,
+                typedAnswers: { ...typedAnswers },
+                screenshots: { ...screenshots },
+                qTimeElapsed: { ...qTimeElapsed },
+                cuteNote,
+                date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            };
+
+            const payload = {
+                username: "RURP Training Vault",
+                avatar_url: "https://i.imgur.com/8Q9Z4X0.png",
+                embeds: [
+                    {
+                        title: isPass ? "Staff Training PASSED" : "Staff Training FAILED",
+                        color: isPass ? 65280 : 16711680,
+                        fields: [
+                            { name: "Conducted By", value: currentUser ? currentUser.discord : "Staff", inline: true },
+                            { name: "Trainee", value: traineeName, inline: true },
+                            { name: "Final Score", value: `${grandTotal.toFixed(1)} / 50 (${Math.round((grandTotal/50)*100)}%)`, inline: true },
+                            { name: "Solved Questions", value: `${solvedCount} / ${QUESTIONS.length} Questions Correct`, inline: true },
+                            { name: "Section Breakdown", value: `• Commands: ${secTotals[1]}/10\n• Questions: ${secTotals[2]}/10\n• Meeting: ${secTotals[3]}/10\n• Driving + Pullover: ${secTotals[4]}/20`, inline: false },
+                            { name: "Trainer Note", value: cuteNote, inline: false }
+                        ],
+                        footer: { text: "RURP Realistic Union RolePlay • Emergency Hamburg" },
+                        timestamp: new Date().toISOString()
+                    }
+                ]
+            };
+
+            try {
+                await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                saveToHistory(record);
+                showToast("Results & full transcript saved to Vault!");
+                if(isPass) confetti({ particleCount: 140, spread: 85, origin: { y: 0.6 } });
+            } catch(err) {
+                console.error(err);
+                saveToHistory(record);
+                showToast("Saved locally to History Vault!");
+            }
+        }
+
+        function copySlashCommand() {
+            saveCurrentAnswerText();
+            let secTotals = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            QUESTIONS.forEach(q => secTotals[q.sec] += (scores[q.id] || 0));
+            const grandTotal = Object.values(secTotals).reduce((a, b) => a + b, 0);
+            const notes = document.getElementById('trainer-notes').value.trim() || "Passed evaluation!";
+            
+            const slashCmd = `/training-results notes:${notes} overall:${grandTotal.toFixed(1)} meeting:${secTotals[3]} driving:${secTotals[4]} questions:${secTotals[2]} commands:${secTotals[1]} trainer:${trainerName} trainee:${traineeName}`;
+            
+            navigator.clipboard.writeText(slashCmd);
+            showToast("Copied slash command formatted for Discord!");
+        }
+
+        function renderQuestionBank() {
+            const container = document.getElementById('question-bank-render');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const sections = [1, 2, 3, 4];
+            sections.forEach(secNum => {
+                const secQuestions = QUESTIONS.filter(q => q.sec === secNum);
+                const card = document.createElement('div');
+                card.className = "gothic-glass rounded-2xl p-6 space-y-4 border border-purple-500/30";
+                
+                let qListHtml = secQuestions.map((q, idx) => `
+                    <div class="bg-purple-950/80 border border-purple-500/30 rounded-xl p-4 text-xs space-y-2">
+                        <div class="flex items-center justify-between font-extrabold text-white gothic-title">
+                            <span>Q${idx+1}. ${q.text}</span>
+                            <span class="text-yellow-400 code-font">${q.max} Pt${q.max > 1 ? 's' : ''}</span>
+                        </div>
+                        <div class="text-yellow-400/70"><strong>Purpose:</strong> ${q.purpose}</div>
+                        <div class="text-yellow-300 code-font"><strong>Guide:</strong> ${q.guide}</div>
+                        <div class="text-purple-200"><strong>Marking:</strong> ${q.marking}</div>
+                    </div>
+                `).join('');
+
+                card.innerHTML = `
+                    <h3 class="text-sm font-black text-yellow-400 uppercase tracking-wider gothic-title">${secQuestions[0].secTitle} (${secQuestions.length} Questions)</h3>
+                    <div class="space-y-3">${qListHtml}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function saveToHistory(record) {
+            let history = JSON.parse(localStorage.getItem('rurp_gothic_history') || '[]');
+            history.unshift(record);
+            localStorage.setItem('rurp_gothic_history', JSON.stringify(history));
+            loadHistoryLogs();
+        }
+
+        function loadHistoryLogs() {
+            const container = document.getElementById('history-list-render');
+            if (!container) return;
+            let history = JSON.parse(localStorage.getItem('rurp_gothic_history') || '[]');
+
+            if(history.length === 0) {
+                container.innerHTML = `<div class="gothic-glass p-8 rounded-2xl text-center text-yellow-400/60 text-sm gothic-title border border-purple-500/30">No recorded history found in Vault.</div>`;
+                return;
+            }
+
+            container.innerHTML = history.map((h, hIdx) => {
+                let answerItems = "";
+                QUESTIONS.forEach(q => {
+                    const ansText = h.typedAnswers ? h.typedAnswers[q.id] : "";
+                    const img = h.screenshots ? h.screenshots[q.id] : "";
+                    const timeSec = h.qTimeElapsed ? (h.qTimeElapsed[q.id] || 0) : 0;
+                    const tm = String(Math.floor(timeSec / 60)).padStart(2, '0');
+                    const ts = String(timeSec % 60).padStart(2, '0');
+
+                    if(ansText || img || timeSec > 0) {
+                        answerItems += `
+                            <div class="bg-purple-950/90 border border-purple-500/30 rounded-xl p-3 space-y-2 text-xs">
+                                <div class="flex items-center justify-between font-bold text-yellow-300 gothic-title">
+                                    <span>Q${q.id}. ${q.text}</span>
+                                    <span class="text-yellow-400 code-font text-[10px]"><i class="fa-solid fa-clock"></i> ${tm}:${ts}</span>
+                                </div>
+                                ${ansText ? `<div class="text-purple-100 code-font bg-purple-900/60 p-2 rounded border border-purple-500/30">" ${ansText} "</div>` : ''}
+                                ${img ? `<div><img src="${img}" class="h-24 rounded-lg border border-yellow-400/50 object-cover shadow"></div>` : ''}
+                            </div>
+                        `;
+                    }
+                });
+
+                return `
+                    <div class="gothic-glass rounded-3xl p-6 space-y-4 border-l-4 ${h.isPass ? 'border-emerald-500' : 'border-rose-500'} border border-purple-500/30">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-purple-500/30 pb-4">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-base font-black text-white gothic-title">${h.traineeName}</span>
+                                    <span class="text-xs px-2.5 py-0.5 rounded ${h.isPass ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'} font-extrabold gothic-title">${h.isPass ? 'PASSED' : 'FAILED'}</span>
+                                </div>
+                                <p class="text-xs text-yellow-400/70 mt-0.5">Conducted by: <strong class="text-white">${h.conductedBy}</strong> • Trainer: <strong class="text-white">${h.trainerName}</strong> • ${h.date}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-black text-white code-font">${h.grandTotal.toFixed(1)} / 50</div>
+                                <div class="text-xs text-yellow-400 font-bold gothic-title">${h.solvedCount || 0} / ${h.totalQuestions || 22} Solved</div>
+                            </div>
+                        </div>
+
+                        ${h.cuteNote ? `
+                            <div class="bg-purple-900/40 border border-purple-500/30 rounded-2xl p-3.5 text-xs text-purple-200 flex items-center gap-2.5">
+                                <span class="text-base"><i class="fa-solid fa-scroll text-yellow-400"></i></span>
+                                <div><strong>Trainer Note:</strong> ${h.cuteNote}</div>
+                            </div>
+                        ` : ''}
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs code-font">
+                            <div class="bg-purple-950 p-2.5 rounded-xl border border-purple-500/30"><span class="text-yellow-400/70 block text-[10px] gothic-title">COMMANDS</span><strong>${h.secTotals[1]}/10</strong></div>
+                            <div class="bg-purple-950 p-2.5 rounded-xl border border-purple-500/30"><span class="text-yellow-400/70 block text-[10px] gothic-title">QUESTIONS</span><strong>${h.secTotals[2]}/10</strong></div>
+                            <div class="bg-purple-950 p-2.5 rounded-xl border border-purple-500/30"><span class="text-yellow-400/70 block text-[10px] gothic-title">MEETING</span><strong>${h.secTotals[3]}/10</strong></div>
+                            <div class="bg-purple-950 p-2.5 rounded-xl border border-purple-500/30"><span class="text-yellow-400 block text-[10px] gothic-title">DRIVING + PULLOVER</span><strong>${h.secTotals[4]}/20</strong></div>
+                        </div>
+
+                        ${answerItems ? `
+                            <div class="space-y-2 pt-2">
+                                <div class="text-xs font-bold text-yellow-400 uppercase tracking-wider flex items-center gap-2 gothic-title">
+                                    <i class="fa-solid fa-feather text-yellow-400"></i> Trainee Answers, Timers & Proof Vault
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    ${answerItems}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('rurp_gothic_history');
+            loadHistoryLogs();
+            showToast("History Vault cleared!");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // ANIMATED CLEAN PURPLE & GOLD MESH CANVAS BACKGROUND
+        function initPurpleGoldBackground() {
+            const canvas = document.getElementById('gothic-video-canvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            // Smooth animated floating purple & golden gradient nodes
+            let nodes = [
+                { x: width * 0.2, y: height * 0.3, radius: width * 0.4, color: 'rgba(91, 33, 182, 0.45)', vx: 0.4, vy: 0.3 },
+                { x: width * 0.8, y: height * 0.7, radius: width * 0.45, color: 'rgba(147, 51, 234, 0.35)', vx: -0.3, vy: -0.4 },
+                { x: width * 0.5, y: height * 0.5, radius: width * 0.35, color: 'rgba(234, 179, 8, 0.15)', vx: 0.2, vy: -0.2 }
+            ];
+
+            let particles = [];
+            for(let i = 0; i < 35; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2 + 1,
+                    speedY: Math.random() * -0.5 - 0.2,
+                    speedX: (Math.random() - 0.5) * 0.3,
+                    alpha: Math.random() * 0.6 + 0.2,
+                    color: Math.random() > 0.4 ? '#eab308' : '#a855f7'
+                });
+            }
+
+            function animateBackground() {
+                ctx.fillStyle = "#0b0714";
+                ctx.fillRect(0, 0, width, height);
+
+                // Render soft mesh gradients
+                nodes.forEach(n => {
+                    n.x += n.vx;
+                    n.y += n.vy;
+
+                    if(n.x < 0 || n.x > width) n.vx *= -1;
+                    if(n.y < 0 || n.y > height) n.vy *= -1;
+
+                    let grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.radius);
+                    grad.addColorStop(0, n.color);
+                    grad.addColorStop(1, 'transparent');
+
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Render floating subtle embers
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+
+                    if(p.y < 0) {
+                        p.y = height + 10;
+                        p.x = Math.random() * width;
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+
+                requestAnimationFrame(animateBackground);
+            }
+            animateBackground();
+        }
+
+        // INTERACTIVE CURSOR SPARKLE TRAIL
+        function initCursorEffect() {
+            const canvas = document.getElementById('cursor-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            let mouse = { x: width / 2, y: height / 2 };
+            let particles = [];
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+
+                for(let i = 0; i < 2; i++) {
+                    particles.push({
+                        x: mouse.x,
+                        y: mouse.y,
+                        vx: (Math.random() - 0.5) * 1.2,
+                        vy: (Math.random() - 0.5) * 1.2,
+                        size: Math.random() * 2.5 + 1,
+                        color: Math.random() > 0.4 ? '#eab308' : '#c084fc',
+                        alpha: 1
+                    });
+                }
+            });
+
+            function animateCursor() {
+                ctx.clearRect(0, 0, width, height);
+
+                for(let i = particles.length - 1; i >= 0; i--) {
+                    let p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.alpha -= 0.03;
+
+                    if(p.alpha <= 0) {
+                        particles.splice(i, 1);
+                    } else {
+                        ctx.save();
+                        ctx.globalAlpha = p.alpha;
+                        ctx.fillStyle = p.color;
+                        ctx.shadowBlur = 8;
+                        ctx.shadowColor = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                }
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+        }
+    </script>
 </body>
 </html>
