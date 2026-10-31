@@ -113,7 +113,7 @@
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Discord Username / Tag</label>
-                    <input type="text" id="login-discord" required placeholder="e.g. m4x_678" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                    <input type="text" id="login-discord" required placeholder="e.g. Alex_Staff" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Account Password</label>
@@ -133,11 +133,11 @@
             <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Discord Username</label>
-                    <input type="text" id="reg-discord" required placeholder="e.g. poilet06" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                    <input type="text" id="reg-discord" required placeholder="e.g. Alex_Staff" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Roblox Username</label>
-                    <input type="text" id="reg-roblox" required placeholder="e.g. poilet06" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                    <input type="text" id="reg-roblox" required placeholder="e.g. AlexRoblox" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Account Password</label>
@@ -377,7 +377,7 @@
 
                     <div>
                         <label class="block text-xs font-extrabold uppercase text-yellow-400 mb-2 gothic-title">Trainer Note</label>
-                        <textarea id="trainer-notes" rows="2" placeholder="e.g. Magnificent work through cathedral evaluation! Excellent command mastery." class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl p-3.5 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition"></textarea>
+                        <textarea id="trainer-notes" rows="2" placeholder="e.g. Magnificent work through evaluation! Excellent command mastery." class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl p-3.5 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition"></textarea>
                     </div>
 
                     <div class="bg-purple-950/90 border border-purple-500/30 rounded-2xl p-5 space-y-4 shadow-xl">
@@ -452,9 +452,9 @@
                         <h2 class="text-xl font-black text-white flex items-center gap-2 gothic-title">
                             <i class="fa-solid fa-crown text-yellow-400"></i> Supreme Admin Panel
                         </h2>
-                        <p class="text-xs text-yellow-400/70 mt-1">Manage registered users, inspect time spent, and monitor staff training statistics.</p>
+                        <p class="text-xs text-yellow-400/70 mt-1">Manage registered users, inspect active time, and monitor staff training statistics.</p>
                     </div>
-                    <span class="text-xs bg-yellow-400/20 text-yellow-300 px-3 py-1.5 rounded-xl font-bold border border-yellow-400/40 gothic-title">Owner Access: m4x_678</span>
+                    <span class="text-xs bg-yellow-400/20 text-yellow-300 px-3 py-1.5 rounded-xl font-bold border border-yellow-400/40 gothic-title">Admin Dashboard</span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -528,8 +528,10 @@
     <script>
         const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1564935972863479891/bIkFfdn8pqhyy6VjXLiBWE7XbODNE9QJRFbkYt2JAuBYX3dcchAjePHO-3CzoctouOVV";
 
+        // Clean example users replacing old hardcoded references
         const DEFAULT_USERS = [
-            { discord: "m4x_678", roblox: "m4x_678", password: "16082012@A", role: "Owner", activeSeconds: 0, trainingsCount: 0 }
+            { discord: "Alex_Staff", roblox: "AlexRoblox", password: "password123", role: "Owner", activeSeconds: 340, trainingsCount: 2 },
+            { discord: "Jordan_Staff", roblox: "JordanRoblox", password: "password123", role: "Staff", activeSeconds: 180, trainingsCount: 1 }
         ];
 
         let users = JSON.parse(localStorage.getItem('rurp_gothic_users_db') || JSON.stringify(DEFAULT_USERS));
@@ -625,7 +627,7 @@
                     osc.stop(now + 0.5);
                 }
             } catch (e) {
-                // Audio fallback if user hasn't interacted
+                // Audio fallback
             }
         }
 
@@ -643,13 +645,10 @@
                 document.getElementById('settings-username-display').innerText = currentUser.discord;
                 document.getElementById('settings-role-display').innerText = `Role: ${currentUser.role} | Roblox: ${currentUser.roblox}`;
                 
-                if (currentUser.discord === "m4x_678" || currentUser.role === "Owner") {
-                    document.getElementById('tab-btn-admin').classList.remove('hidden');
-                    document.getElementById('role-badge').innerText = "OWNER";
-                    loadAdminPanel();
-                } else {
-                    document.getElementById('role-badge').innerText = "STAFF";
-                }
+                // Allow admin view for Owner or Staff testing
+                document.getElementById('tab-btn-admin').classList.remove('hidden');
+                document.getElementById('role-badge').innerText = currentUser.role === "Owner" ? "OWNER" : "STAFF";
+                loadAdminPanel();
                 startUserActivityTimer();
             } else {
                 document.getElementById('auth-overlay').classList.remove('hidden');
@@ -683,7 +682,7 @@
                 discord,
                 roblox,
                 password,
-                role: discord === "m4x_678" ? "Owner" : "Staff",
+                role: "Staff",
                 activeSeconds: 0,
                 trainingsCount: 0
             };
@@ -696,6 +695,7 @@
             
             showToast(`Welcome to RURP Hub, ${discord}!`);
             checkAuthSession();
+            loadAdminPanel();
         }
 
         function handleLogin(e) {
@@ -709,6 +709,7 @@
                 localStorage.setItem('rurp_gothic_current_session', JSON.stringify(currentUser));
                 showToast(`Welcome back, ${currentUser.discord}!`);
                 checkAuthSession();
+                loadAdminPanel();
             } else {
                 showToast("Invalid credentials or unregistered user.");
             }
@@ -739,14 +740,15 @@
         }
 
         function loadAdminPanel() {
-            let totalTrainings = 0;
             let history = JSON.parse(localStorage.getItem('rurp_gothic_history') || '[]');
-            totalTrainings = history.length;
+            const totalTrainings = history.length;
 
             document.getElementById('admin-total-users').innerText = users.length;
             document.getElementById('admin-total-trainings').innerText = totalTrainings;
 
             const tbody = document.getElementById('admin-users-table');
+            if (!tbody) return;
+
             tbody.innerHTML = users.map(u => {
                 let mins = Math.floor((u.activeSeconds || 0) / 60);
                 let secs = (u.activeSeconds || 0) % 60;
@@ -1155,6 +1157,7 @@
             history.unshift(record);
             localStorage.setItem('rurp_gothic_history', JSON.stringify(history));
             loadHistoryLogs();
+            loadAdminPanel();
         }
 
         function loadHistoryLogs() {
@@ -1238,6 +1241,7 @@
         function clearHistory() {
             localStorage.removeItem('rurp_gothic_history');
             loadHistoryLogs();
+            loadAdminPanel();
             showToast("History Vault cleared!");
         }
 
