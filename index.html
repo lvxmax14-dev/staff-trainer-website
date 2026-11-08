@@ -3,50 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RURP Realistic Union RolePlay - Staff Evaluation Hub</title>
+    <title>RURP Christmas Staff Evaluation Hub V1.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
         
         :root {
-            --theme-bg: #0b0714;
-            --theme-card: rgba(23, 14, 40, 0.75);
-            --theme-purple: #9333ea;
-            --theme-gold: #eab308;
-            --theme-border: rgba(147, 51, 234, 0.35);
+            --theme-bg: #051510;
+            --theme-card: rgba(10, 31, 22, 0.95);
+            --theme-gold: #facc15;
+            --theme-border: rgba(251, 191, 36, 0.3);
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--theme-bg);
             color: #f3f4f6;
             overflow-x: hidden;
             cursor: default;
         }
 
-        .gothic-title {
-            font-family: 'Cinzel Decorative', serif;
+        .heading-font {
+            font-family: 'Rajdhani', sans-serif;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .code-font {
             font-family: 'JetBrains Mono', monospace;
         }
 
-        .gothic-glass {
-            background: linear-gradient(135deg, rgba(24, 14, 42, 0.85) 0%, rgba(12, 6, 24, 0.92) 100%);
+        .hub-glass {
+            background: linear-gradient(135deg, rgba(10, 31, 22, 0.94) 0%, rgba(4, 18, 12, 0.98) 100%);
             backdrop-filter: blur(24px);
             border: 1px solid var(--theme-border);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(234, 179, 8, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(251, 191, 36, 0.2);
         }
 
-        .gothic-glow {
-            box-shadow: 0 0 35px rgba(147, 51, 234, 0.3), inset 0 0 15px rgba(234, 179, 8, 0.15);
+        .hub-glow {
+            box-shadow: 0 0 40px rgba(220, 38, 38, 0.2), inset 0 0 15px rgba(251, 191, 36, 0.1);
         }
 
-        #gothic-video-canvas, #cursor-canvas {
+        #bg-canvas, #cursor-canvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -54,45 +54,208 @@
             height: 100vh;
             pointer-events: none;
         }
-        #gothic-video-canvas { z-index: 0; }
+        #bg-canvas { z-index: 0; }
         #cursor-canvas { z-index: 9999; }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0b0714; }
-        ::-webkit-scrollbar-thumb { background: #7e22ce; border: 1px solid #eab308; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: #051510; }
+        ::-webkit-scrollbar-thumb { background: #166534; border: 1px solid #facc15; border-radius: 4px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between relative selection:bg-yellow-400 selection:text-purple-950">
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-red-600 selection:text-white">
 
-    <canvas id="gothic-video-canvas"></canvas>
+    <canvas id="bg-canvas"></canvas>
     <canvas id="cursor-canvas"></canvas>
-    <div class="fixed inset-0 pointer-events-none z-0 opacity-10" style="background-image: radial-gradient(#eab308 1px, transparent 1px); background-size: 36px 36px;"></div>
+
+    <!-- INITIAL LOADING SCREEN -->
+    <div id="loading-screen" class="fixed inset-0 z-50 bg-[#051510] flex flex-col items-center justify-center p-6 transition-opacity duration-700">
+        <div class="hub-glass rounded-3xl p-8 max-w-sm w-full text-center space-y-6 hub-glow border border-amber-500/40">
+            <div class="w-16 h-16 bg-gradient-to-br from-red-600 to-emerald-600 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto shadow-lg shadow-red-600/30">
+                <i class="fa-solid fa-holly-berry"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-black text-amber-300 heading-font">RURP XMAS HUB V1.3</h2>
+                <p class="text-xs text-emerald-200/70 mt-1">Preparing Holiday Evaluation Suite...</p>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between text-xs font-bold text-amber-400 code-font">
+                    <span>Loading Snow & Assets</span>
+                    <span id="load-percent">0%</span>
+                </div>
+                <div class="w-full h-2.5 bg-emerald-950 rounded-full overflow-hidden border border-emerald-500/40">
+                    <div id="load-bar" class="h-full bg-gradient-to-r from-red-500 to-amber-400 transition-all duration-75" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUSPENSE 20-SECOND RESULT LOADING SCREEN -->
+    <div id="suspense-screen" class="fixed inset-0 z-50 bg-[#051510]/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 hidden">
+        <div class="hub-glass rounded-3xl p-8 max-w-md w-full text-center space-y-6 hub-glow border border-amber-500/50">
+            <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-red-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto shadow-xl animate-pulse">
+                <i class="fa-solid fa-snowflake fa-spin"></i>
+            </div>
+            <div class="space-y-2">
+                <h2 class="text-2xl font-black text-amber-300 heading-font">Calculating Final Results...</h2>
+                <p id="suspense-status-msg" class="text-xs text-emerald-200/80 code-font">Analyzing section metrics & verifying V1.3 standards...</p>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between text-xs font-bold text-amber-400 code-font">
+                    <span>Suspense Progress</span>
+                    <span id="suspense-timer-count">20s</span>
+                </div>
+                <div class="w-full h-3 bg-emerald-950 rounded-full overflow-hidden border border-amber-500/40">
+                    <div id="suspense-bar" class="h-full bg-gradient-to-r from-red-600 via-amber-400 to-emerald-500 transition-all duration-1000" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DEDICATED FULL-SCREEN RESULT PANEL OVERLAY -->
+    <div id="final-result-overlay" class="fixed inset-0 z-50 bg-[#051510]/95 backdrop-blur-2xl overflow-y-auto p-4 sm:p-8 hidden">
+        <div class="max-w-4xl mx-auto my-8 space-y-6">
+            <div class="hub-glass rounded-3xl p-6 sm:p-10 space-y-6 hub-glow border border-amber-500/50">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-emerald-500/30 pb-6">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 heading-font">EXAM COMPLETED</span>
+                            <span class="text-xs text-emerald-300/70 code-font" id="result-overlay-meta">Trainer: - | Trainee: -</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-white flex items-center gap-2 heading-font mt-2">
+                            <i class="fa-solid fa-square-poll-vertical text-amber-400"></i> FINAL EVALUATION BREAKDOWN V1.3
+                        </h2>
+                        <p class="text-xs text-emerald-300/70 mt-1">Review finalized section scores, add a note, and make your Pass/Fail decision.</p>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="setManualDecision('pass')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition shadow-lg heading-font border border-emerald-400/40">
+                            <i class="fa-solid fa-check mr-1"></i> PASSED
+                        </button>
+                        <button onclick="setManualDecision('fail')" class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs transition shadow-lg heading-font border border-red-400/40">
+                            <i class="fa-solid fa-xmark mr-1"></i> FAILED
+                        </button>
+                        <button onclick="setManualDecision('skipped')" class="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-emerald-950 font-extrabold text-xs transition shadow-lg heading-font border border-amber-300">
+                            <i class="fa-solid fa-ban mr-1"></i> SKIPPED (AUTO-FAIL)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ALL SECTION MARKINGS BREAKDOWN -->
+                <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                    <div class="bg-emerald-950/80 p-4 rounded-2xl border border-emerald-800 space-y-1">
+                        <div class="text-[10px] text-emerald-300 font-bold uppercase heading-font">Commands</div>
+                        <div id="summary-sec-1" class="text-lg font-black text-white code-font">0/10</div>
+                    </div>
+                    <div class="bg-emerald-950/80 p-4 rounded-2xl border border-emerald-800 space-y-1">
+                        <div class="text-[10px] text-emerald-300 font-bold uppercase heading-font">Questions</div>
+                        <div id="summary-sec-2" class="text-lg font-black text-white code-font">0/10</div>
+                    </div>
+                    <div class="bg-emerald-950/80 p-4 rounded-2xl border border-emerald-800 space-y-1">
+                        <div class="text-[10px] text-emerald-300 font-bold uppercase heading-font">Meeting</div>
+                        <div id="summary-sec-3" class="text-lg font-black text-white code-font">0/10</div>
+                    </div>
+                    <div class="bg-emerald-950/80 p-4 rounded-2xl border border-emerald-800 space-y-1">
+                        <div class="text-[10px] text-emerald-300 font-bold uppercase heading-font">Driving</div>
+                        <div id="summary-sec-4" class="text-lg font-black text-white code-font">0/5</div>
+                    </div>
+                    <div class="bg-emerald-950/80 p-4 rounded-2xl border border-emerald-800 space-y-1">
+                        <div class="text-[10px] text-amber-400 font-bold uppercase heading-font">Pull Over</div>
+                        <div id="summary-sec-5" class="text-lg font-black text-white code-font">0/5</div>
+                    </div>
+                </div>
+
+                <!-- CUSTOM NOTE INPUT FIELD -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 heading-font">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i> ADD CUSTOM TRAINING NOTE / FEEDBACK
+                    </label>
+                    <input type="text" id="custom-training-note" placeholder="e.g. Excellent holiday spirit, calm control during meeting scenario." class="w-full bg-emerald-950/90 border border-emerald-500/40 rounded-xl px-4 py-3.5 text-white text-xs sm:text-sm focus:border-amber-400 outline-none transition code-font">
+                </div>
+
+                <div class="bg-emerald-950/90 border border-emerald-500/30 rounded-2xl p-6 space-y-4 shadow-xl">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-xs font-extrabold text-emerald-300 uppercase tracking-wider heading-font">
+                            <i class="fa-brands fa-discord text-amber-400 text-base"></i> Discord Embed Preview
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="submitToWebhook()" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs transition shadow-lg heading-font border border-amber-400/40">
+                                <i class="fa-brands fa-discord mr-1"></i> Send Webhook
+                            </button>
+                            <button onclick="copySlashCommand(); playSfx('click');" class="px-5 py-2.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-amber-300 font-extrabold text-xs border border-emerald-500/40 transition heading-font">
+                                <i class="fa-solid fa-copy mr-1"></i> Copy Slash Cmd
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border-l-4 rounded-lg pl-4 py-3 space-y-2 bg-emerald-900/40 border-red-500" id="discord-embed-border">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-extrabold text-white">RURP Xmas Staff Training Log V1.3</span>
+                            <span id="embed-status-tag" class="text-xs font-extrabold px-2.5 py-0.5 rounded bg-red-500/20 text-red-400">FAILED</span>
+                        </div>
+                        <div class="text-xs text-emerald-200 space-y-1 code-font">
+                            <div><strong>Trainee:</strong> <span id="embed-trainee">-</span></div>
+                            <div><strong>Trainer:</strong> <span id="embed-trainer">-</span></div>
+                            <div><strong>Overall Score:</strong> <span id="embed-score">0 / 40 (0%)</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center pt-4">
+                    <button onclick="closeResultOverlayAndReset(); playSfx('click');" class="px-8 py-3 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-300 font-bold text-xs uppercase tracking-wider heading-font border border-amber-400/40 transition">
+                        <i class="fa-solid fa-rotate-right mr-2"></i> Start New Evaluation Session
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRE-TRAINING RULES MODAL -->
+    <div id="rules-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-emerald-950/85 backdrop-blur-xl hidden">
+        <div class="hub-glass rounded-3xl p-8 max-w-lg w-full space-y-6 hub-glow border border-amber-500/40">
+            <div class="flex items-center gap-3 border-b border-emerald-500/30 pb-4">
+                <div class="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center text-red-400">
+                    <i class="fa-solid fa-tree text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-black text-white heading-font">Mandatory Pre-Training Rules</h3>
+                    <p class="text-xs text-amber-400/80">Guide V1.3 Holiday Compliance Check</p>
+                </div>
+            </div>
+            <div class="space-y-3 text-xs text-emerald-100 leading-relaxed bg-emerald-950/80 p-4 rounded-2xl border border-emerald-500/30 code-font">
+                <div class="flex items-start gap-2"><i class="fa-solid fa-check text-amber-400 mt-0.5"></i><span>Trainee is available for full duration of the session.</span></div>
+                <div class="flex items-start gap-2"><i class="fa-solid fa-check text-amber-400 mt-0.5"></i><span>Correct SPaG (Spelling, Punctuation & Grammar) enforced at all times.</span></div>
+                <div class="flex items-start gap-2"><i class="fa-solid fa-check text-amber-400 mt-0.5"></i><span>Out-of-scene communication requires parentheses <strong>( )</strong>.</span></div>
+                <div class="flex items-start gap-2"><i class="fa-solid fa-check text-amber-400 mt-0.5"></i><span>Must say <strong>PTS</strong> for questions/clarification. Leaving results in immediate fail.</span></div>
+            </div>
+            <button onclick="confirmRulesAndLaunch(); playSfx('click');" class="w-full bg-gradient-to-r from-red-600 to-amber-500 text-white font-black py-3.5 rounded-xl text-xs uppercase tracking-wider heading-font shadow-lg border border-amber-200">
+                <i class="fa-solid fa-gift mr-2"></i> I Have Explained All Rules to Trainee
+            </button>
+        </div>
+    </div>
 
     <!-- AUTHENTICATION OVERLAY -->
-    <div id="auth-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-purple-950/80 backdrop-blur-2xl">
-        <div class="gothic-glass rounded-3xl p-8 max-w-md w-full gothic-glow space-y-6 relative border border-yellow-500/40">
+    <div id="auth-overlay" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-emerald-950/90 backdrop-blur-2xl hidden">
+        <div class="hub-glass rounded-3xl p-8 max-w-md w-full hub-glow space-y-6 relative border border-amber-500/40">
             <div class="text-center space-y-2">
-                <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 via-amber-500 to-purple-700 rounded-2xl flex items-center justify-center text-purple-950 text-2xl font-black mx-auto shadow-lg shadow-yellow-500/30 border border-yellow-300">
-                    <i class="fa-solid fa-shield-halved"></i>
+                <div class="w-16 h-16 bg-gradient-to-br from-red-600 to-emerald-700 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto shadow-lg shadow-red-600/30 border border-amber-300">
+                    <i class="fa-solid fa-sleigh"></i>
                 </div>
-                <h2 class="text-2xl font-black text-yellow-300 gothic-title tracking-wider">RURP Command Hub</h2>
-                <p id="auth-subtitle" class="text-xs text-purple-200/70 font-medium">Log in to conduct staff evaluations</p>
+                <h2 class="text-2xl font-black text-amber-300 heading-font tracking-wider">RURP Xmas Hub</h2>
+                <p id="auth-subtitle" class="text-xs text-emerald-200/70 font-medium">Log in to conduct staff evaluations</p>
             </div>
 
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Discord Username / Tag</label>
-                    <input type="text" id="login-discord" required placeholder="e.g. Alex_Staff" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1.5 heading-font">Discord Username / Tag</label>
+                    <input type="text" id="login-discord" required placeholder="e.g. Alex_Staff" class="w-full bg-emerald-950/90 border border-emerald-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-400 outline-none transition code-font">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Account Password</label>
-                    <input type="password" id="login-password" required placeholder="••••••••••••" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1.5 heading-font">Account Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••••••" class="w-full bg-emerald-950/90 border border-emerald-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-400 outline-none transition code-font">
                 </div>
-                <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black py-3.5 rounded-xl shadow-lg shadow-yellow-400/20 transition text-xs uppercase tracking-wider gothic-title border border-yellow-200">
-                    <i class="fa-solid fa-key mr-2"></i> Enter Command Hub
+                <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-red-600 to-amber-500 text-white font-black py-3.5 rounded-xl shadow-lg transition text-xs uppercase tracking-wider heading-font border border-amber-200">
+                    <i class="fa-solid fa-key mr-2"></i> Enter Holiday Hub
                 </button>
                 <div class="text-center pt-2">
-                    <button type="button" onclick="toggleAuthMode('register'); playSfx('click');" class="text-xs text-yellow-400 hover:underline font-bold gothic-title">
+                    <button type="button" onclick="toggleAuthMode('register'); playSfx('click');" class="text-xs text-amber-400 hover:underline font-bold heading-font">
                         No account? Register here
                     </button>
                 </div>
@@ -100,22 +263,22 @@
 
             <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Discord Username</label>
-                    <input type="text" id="reg-discord" required placeholder="e.g. Alex_Staff" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1.5 heading-font">Discord Username</label>
+                    <input type="text" id="reg-discord" required placeholder="e.g. Alex_Staff" class="w-full bg-emerald-950/90 border border-emerald-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-400 outline-none transition code-font">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Roblox Username</label>
-                    <input type="text" id="reg-roblox" required placeholder="e.g. AlexRoblox" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1.5 heading-font">Roblox Username</label>
+                    <input type="text" id="reg-roblox" required placeholder="e.g. AlexRoblox" class="w-full bg-emerald-950/90 border border-emerald-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-400 outline-none transition code-font">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-1.5 gothic-title">Account Password</label>
-                    <input type="password" id="reg-password" required placeholder="••••••••••••" class="w-full bg-purple-950/90 border border-purple-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1.5 heading-font">Account Password</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••••••" class="w-full bg-emerald-950/90 border border-emerald-500/40 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-400 outline-none transition code-font">
                 </div>
-                <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black py-3.5 rounded-xl shadow-lg shadow-yellow-400/20 transition text-xs uppercase tracking-wider gothic-title border border-yellow-200">
+                <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-red-600 to-amber-500 text-white font-black py-3.5 rounded-xl shadow-lg transition text-xs uppercase tracking-wider heading-font border border-amber-200">
                     <i class="fa-solid fa-user-plus mr-2"></i> Create Account
                 </button>
                 <div class="text-center pt-2">
-                    <button type="button" onclick="toggleAuthMode('login'); playSfx('click');" class="text-xs text-yellow-400 hover:underline font-bold gothic-title">
+                    <button type="button" onclick="toggleAuthMode('login'); playSfx('click');" class="text-xs text-amber-400 hover:underline font-bold heading-font">
                         Already registered? Login here
                     </button>
                 </div>
@@ -123,36 +286,36 @@
         </div>
     </div>
 
-    <!-- HEADER NAVIGATION (FIXED OVERLAPS) -->
-    <header class="sticky top-0 z-40 border-b border-purple-500/30 gothic-glass">
+    <!-- HEADER NAVIGATION -->
+    <header class="sticky top-0 z-30 border-b border-emerald-500/30 hub-glass">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
             <div class="flex items-center space-x-3.5 min-w-max">
-                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-400 via-amber-500 to-purple-600 flex items-center justify-center font-black text-purple-950 text-xl shadow-xl border border-yellow-300 shrink-0">
-                    RU
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-red-600 to-amber-500 flex items-center justify-center font-black text-white text-xl shadow-xl border border-amber-300 shrink-0">
+                    🎄
                 </div>
                 <div class="flex flex-col justify-center">
                     <div class="flex items-center gap-2">
-                        <span class="text-sm sm:text-base font-extrabold tracking-tight text-yellow-200 gothic-title">RURP Evaluation Suite V1.2</span>
-                        <span id="role-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 code-font shrink-0">STAFF</span>
+                        <span class="text-base sm:text-lg font-extrabold tracking-tight text-amber-200 heading-font">RURP Xmas Suite V1.3</span>
+                        <span id="role-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-600/20 text-red-300 border border-red-500/40 code-font shrink-0">STAFF</span>
                     </div>
-                    <p class="text-[11px] text-purple-300/70 font-medium">Realistic Union RolePlay • Emergency Hamburg</p>
+                    <p class="text-[11px] text-emerald-300/70 font-medium">Realistic Union RolePlay • Holiday Edition</p>
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center space-x-2 bg-purple-950/80 p-1.5 rounded-2xl border border-purple-500/30">
-                <button onclick="switchTab('eval')" id="tab-btn-eval" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-950 shadow-lg gothic-title">
-                    <i class="fa-solid fa-crown"></i> Active Exam
+            <nav class="hidden md:flex items-center space-x-2 bg-emerald-950/80 p-1.5 rounded-2xl border border-emerald-500/30">
+                <button onclick="switchTab('eval')" id="tab-btn-eval" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-red-600 to-amber-500 text-white shadow-lg heading-font">
+                    <i class="fa-solid fa-candy-cane"></i> Active Exam
                 </button>
-                <button onclick="switchTab('bank')" id="tab-btn-bank" class="px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                <button onclick="switchTab('bank')" id="tab-btn-bank" class="px-3.5 py-2 rounded-xl text-xs font-bold text-amber-300/70 hover:text-white transition-all flex items-center gap-2 heading-font">
                     <i class="fa-solid fa-book-bookmark"></i> Question Bank
                 </button>
-                <button onclick="switchTab('history')" id="tab-btn-history" class="px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                <button onclick="switchTab('history')" id="tab-btn-history" class="px-3.5 py-2 rounded-xl text-xs font-bold text-amber-300/70 hover:text-white transition-all flex items-center gap-2 heading-font">
                     <i class="fa-solid fa-clock-rotate-left"></i> History
                 </button>
-                <button onclick="switchTab('admin')" id="tab-btn-admin" class="hidden px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-400 hover:text-white transition-all flex items-center gap-2 bg-purple-500/20 border border-yellow-400/40 gothic-title">
+                <button onclick="switchTab('admin')" id="tab-btn-admin" class="hidden px-3.5 py-2 rounded-xl text-xs font-bold text-amber-400 hover:text-white transition-all flex items-center gap-2 bg-emerald-500/20 border border-amber-400/40 heading-font">
                     <i class="fa-solid fa-user-shield"></i> Admin
                 </button>
-                <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title">
+                <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-3.5 py-2 rounded-xl text-xs font-bold text-amber-300/70 hover:text-white transition-all flex items-center gap-2 heading-font">
                     <i class="fa-solid fa-gear"></i> Settings
                 </button>
             </nav>
@@ -163,189 +326,128 @@
 
         <!-- TAB 1: EVALUATION SUITE -->
         <div id="tab-eval" class="space-y-6">
-            <div id="setup-card" class="gothic-glass rounded-3xl p-8 max-w-2xl mx-auto gothic-glow border border-purple-500/30">
+            <div id="setup-card" class="hub-glass rounded-3xl p-8 max-w-2xl mx-auto hub-glow border border-emerald-500/30">
                 <div class="text-center mb-8">
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-600/30 to-yellow-500/20 border border-yellow-400/50 rounded-2xl flex items-center justify-center text-yellow-300 text-2xl mx-auto mb-4 shadow-inner">
-                        <i class="fa-solid fa-clipboard-check"></i>
+                    <div class="w-16 h-16 bg-gradient-to-br from-red-600/30 to-amber-500/20 border border-amber-400/50 rounded-2xl flex items-center justify-center text-amber-300 text-2xl mx-auto mb-4 shadow-inner">
+                        <i class="fa-solid fa-gift"></i>
                     </div>
-                    <h2 class="text-2xl font-black text-yellow-200 gothic-title">Start RURP Staff Evaluation</h2>
-                    <p class="text-purple-200/70 text-sm mt-1">5 Sections: Commands (10), Questions (10), Meeting (10), Driving (10), Pullover (10).</p>
+                    <h2 class="text-2xl font-black text-amber-200 heading-font">Start RURP Xmas Evaluation</h2>
+                    <p class="text-emerald-200/70 text-sm mt-1">Marked out of 40 Points. Passing threshold: 32.5 / 40 Pts (85%).</p>
                 </div>
 
-                <form onsubmit="startSession(event)" class="space-y-5">
+                <form onsubmit="handleInitialSetup(event)" class="space-y-5">
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-2 gothic-title">Trainee Discord / Roblox Username</label>
-                        <input type="text" id="setup-trainee" required placeholder="e.g. @TraineeRoblox" class="w-full bg-purple-950/80 border border-purple-500/40 rounded-xl px-4 py-3.5 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 heading-font">Trainee Discord / Roblox Username</label>
+                        <input type="text" id="setup-trainee" required placeholder="e.g. @TraineeRoblox" class="w-full bg-emerald-950/80 border border-emerald-500/40 rounded-xl px-4 py-3.5 text-white text-sm focus:border-amber-400 outline-none transition code-font">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-yellow-400 mb-2 gothic-title">Trainer Discord Username</label>
-                        <input type="text" id="setup-trainer" required placeholder="e.g. @SeniorTrainer" class="w-full bg-purple-950/80 border border-purple-500/40 rounded-xl px-4 py-3.5 text-white text-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 outline-none transition code-font">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 heading-font">Trainer Discord Username</label>
+                        <input type="text" id="setup-trainer" required placeholder="e.g. @SeniorTrainer" class="w-full bg-emerald-950/80 border border-emerald-500/40 rounded-xl px-4 py-3.5 text-white text-sm focus:border-amber-400 outline-none transition code-font">
                     </div>
 
-                    <div class="bg-purple-900/30 border border-purple-500/30 rounded-2xl p-4 flex items-start gap-3 text-xs text-purple-200">
-                        <i class="fa-solid fa-circle-info text-base shrink-0 mt-0.5 text-yellow-400"></i>
-                        <p>Passing requirement: <strong>42.5 / 50 Points (85%)</strong>. Strict SPaG enforced across all scenarios.</p>
+                    <div class="bg-emerald-900/30 border border-emerald-500/30 rounded-2xl p-4 flex items-start gap-3 text-xs text-emerald-200">
+                        <i class="fa-solid fa-circle-info text-base shrink-0 mt-0.5 text-amber-400"></i>
+                        <p><strong>Notice:</strong> Every section must be executed and not skipped. Live scores are hidden during the exam.</p>
                     </div>
 
-                    <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black py-4 rounded-xl shadow-xl shadow-purple-900/40 transition text-xs uppercase tracking-wider gothic-title border border-yellow-300 flex items-center justify-center gap-3">
-                        <i class="fa-solid fa-play text-base"></i> Begin Staff Evaluation
+                    <button type="submit" onclick="playSfx('click')" class="w-full bg-gradient-to-r from-red-600 to-amber-500 text-white font-black py-4 rounded-xl shadow-xl transition text-xs uppercase tracking-wider heading-font border border-amber-300 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-arrow-right"></i> Proceed to Rules Agreement
                     </button>
                 </form>
             </div>
 
             <!-- ACTIVE EXAM INTERFACE -->
             <div id="active-session" class="hidden space-y-6">
-                <div class="gothic-glass rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-purple-500/30">
+                <div class="hub-glass rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-emerald-500/30">
                     <div class="flex items-center gap-4 w-full md:w-auto">
-                        <div class="w-12 h-12 rounded-xl bg-purple-950 border border-purple-500/40 flex items-center justify-center text-yellow-400 text-xl shadow-md">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-amber-400 text-xl shadow-md">
                             <i class="fa-solid fa-user-check"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="text-[10px] uppercase font-bold text-yellow-400/70 tracking-wider gothic-title">Trainee</span>
-                                <span id="session-timer" class="code-font text-xs text-yellow-300 bg-purple-950 border border-purple-500/40 px-2.5 py-0.5 rounded-md">Total 00:00</span>
+                                <span class="text-[10px] uppercase font-bold text-amber-400/70 tracking-wider heading-font">Trainee</span>
+                                <span id="session-timer" class="code-font text-xs text-amber-300 bg-emerald-950 border border-emerald-500/40 px-2.5 py-0.5 rounded-md">Total 00:00</span>
                             </div>
                             <h3 id="display-trainee-name" class="text-lg font-extrabold text-white">TraineeName</h3>
-                            <p class="text-xs text-purple-300/75">Trainer: <span id="display-trainer-name" class="text-white font-semibold">TrainerName</span></p>
+                            <p class="text-xs text-emerald-300/75">Trainer: <span id="display-trainer-name" class="text-white font-semibold">TrainerName</span></p>
                         </div>
                     </div>
 
                     <div class="flex-1 w-full max-w-md space-y-2">
                         <div class="flex justify-between text-xs font-bold">
-                            <span id="current-step-label" class="text-yellow-400 gothic-title">Question 1 of 23</span>
-                            <span id="overall-percent" class="text-purple-300/70">0% Done</span>
+                            <span id="current-step-label" class="text-amber-400 heading-font">Question 1 of 22</span>
+                            <span id="overall-percent" class="text-emerald-300/70">0% Done</span>
                         </div>
-                        <div class="w-full h-3 bg-purple-950 rounded-full overflow-hidden border border-purple-500/30 shadow-inner">
-                            <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-purple-500 via-purple-400 to-yellow-400 transition-all duration-300" style="width: 0%"></div>
+                        <div class="w-full h-3 bg-emerald-950 rounded-full overflow-hidden border border-emerald-500/30 shadow-inner">
+                            <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-red-600 via-amber-400 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-5 w-full md:w-auto justify-end border-t md:border-t-0 border-purple-500/20 pt-4 md:pt-0">
+                    <div class="flex items-center gap-5 w-full md:w-auto justify-end border-t md:border-t-0 border-emerald-500/20 pt-4 md:pt-0">
                         <div class="text-right">
-                            <div class="text-[10px] text-yellow-400/70 font-bold uppercase tracking-wider gothic-title">Live Total</div>
-                            <div class="text-2xl font-black text-white code-font">
-                                <span id="live-score">0.0</span> <span class="text-xs text-purple-400/60 font-normal">/ 50</span>
+                            <div class="text-[10px] text-amber-400/70 font-bold uppercase tracking-wider heading-font">Live Status</div>
+                            <div class="text-xs font-extrabold text-amber-300 code-font bg-emerald-950 px-3 py-1.5 rounded-xl border border-emerald-500/30">
+                                <i class="fa-solid fa-eye-slash mr-1"></i> Scores Hidden
                             </div>
-                        </div>
-                        <div id="status-badge" class="px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/40 text-rose-400 text-xs font-extrabold flex items-center gap-2 shadow-lg">
-                            <i class="fa-solid fa-circle-xmark"></i> FAIL
                         </div>
                     </div>
                 </div>
 
-                <div class="gothic-glass rounded-3xl p-6 sm:p-8 relative gothic-glow space-y-6 border border-purple-500/30">
-                    <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-purple-500/30">
+                <div class="hub-glass rounded-3xl p-6 sm:p-8 relative hub-glow space-y-6 border border-emerald-500/30">
+                    <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-emerald-500/30">
                         <div class="flex items-center gap-3">
-                            <span id="q-category-tag" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold uppercase tracking-wider bg-purple-500/20 text-yellow-300 border border-purple-500/40 gothic-title">
+                            <span id="q-category-tag" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-amber-300 border border-emerald-500/40 heading-font">
                                 Section 1: Commands
                             </span>
-                            <span id="q-weight-tag" class="text-xs font-bold text-yellow-300 bg-purple-950 px-3 py-1.5 rounded-xl border border-purple-500/30 shadow-sm code-font">
+                            <span id="q-weight-tag" class="text-xs font-bold text-amber-300 bg-emerald-950 px-3 py-1.5 rounded-xl border border-emerald-500/30 shadow-sm code-font">
                                 Max Points: 1.0 Pt
                             </span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="copyQuestionForRoblox(); playSfx('click');" class="px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-extrabold text-xs transition shadow-lg shadow-yellow-500/20 flex items-center gap-2 gothic-title border border-yellow-200">
+                            <button onclick="copyQuestionForRoblox(); playSfx('click');" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 text-white font-extrabold text-xs transition shadow-lg flex items-center gap-2 heading-font border border-amber-200">
                                 <i class="fa-solid fa-gamepad"></i> Copy Question for Roblox
                             </button>
                         </div>
                     </div>
 
                     <div class="space-y-3">
-                        <h3 class="text-xs uppercase font-extrabold text-yellow-400/70 tracking-wider gothic-title">Prompt / Scenario</h3>
+                        <h3 class="text-xs uppercase font-extrabold text-amber-400/70 tracking-wider heading-font">Prompt / Scenario</h3>
                         <p id="q-prompt-text" class="text-xl sm:text-2xl font-black text-white leading-relaxed">
                             Loading prompt...
                         </p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-purple-950/80 border border-purple-500/30 rounded-2xl p-4 space-y-2 shadow-inner">
-                            <span class="text-xs font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-2 gothic-title">
+                        <div class="bg-emerald-950/80 border border-emerald-500/30 rounded-2xl p-4 space-y-2 shadow-inner">
+                            <span class="text-xs font-extrabold text-amber-400 uppercase tracking-wider flex items-center gap-2 heading-font">
                                 <i class="fa-solid fa-bullseye"></i> Purpose & Expected Response
                             </span>
-                            <p id="q-answer-guide" class="text-xs sm:text-sm text-purple-100 code-font leading-relaxed">
+                            <p id="q-answer-guide" class="text-xs sm:text-sm text-emerald-100 code-font leading-relaxed">
                                 Loading guide...
                             </p>
                         </div>
-                        <div class="bg-purple-950/80 border border-purple-500/30 rounded-2xl p-4 space-y-2 shadow-inner">
-                            <span class="text-xs font-extrabold text-yellow-300 uppercase tracking-wider flex items-center gap-2 gothic-title">
-                                <i class="fa-solid fa-scale-balanced"></i> Official Marking Breakdown
+                        <div class="bg-emerald-950/80 border border-emerald-500/30 rounded-2xl p-4 space-y-2 shadow-inner">
+                            <span class="text-xs font-extrabold text-amber-300 uppercase tracking-wider flex items-center gap-2 heading-font">
+                                <i class="fa-solid fa-scale-balanced"></i> Guide V1.3 Marking Breakdown
                             </span>
-                            <p id="q-marking-reason" class="text-xs sm:text-sm text-purple-100 leading-relaxed">
-                                Award points based on official criteria.
+                            <p id="q-marking-reason" class="text-xs sm:text-sm text-emerald-100 leading-relaxed">
+                                Award points based on V1.3 criteria.
                             </p>
                         </div>
                     </div>
 
                     <div class="space-y-3 pt-2">
-                        <label class="block text-xs font-extrabold uppercase tracking-wider text-purple-200 gothic-title">Award Score for this Question/Scenario</label>
+                        <label class="block text-xs font-extrabold uppercase tracking-wider text-emerald-200 heading-font">Award Score for this Question/Scenario</label>
                         <div id="scoring-buttons-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
                     </div>
 
-                    <div class="flex items-center justify-between pt-6 border-t border-purple-500/30">
-                        <button onclick="prevQuestion(); playSfx('click');" id="prev-btn" class="px-5 py-3 rounded-xl bg-purple-950 hover:bg-purple-900 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 border border-purple-500/30 disabled:opacity-40 gothic-title">
+                    <div class="flex items-center justify-between pt-6 border-t border-emerald-500/30">
+                        <button onclick="prevQuestion(); playSfx('click');" id="prev-btn" class="px-5 py-3 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 border border-emerald-500/30 disabled:opacity-40 heading-font">
                             <i class="fa-solid fa-arrow-left"></i> Previous
                         </button>
-                        <button onclick="nextQuestion(); playSfx('click');" id="next-btn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-purple-950 font-black text-xs sm:text-sm transition shadow-lg shadow-yellow-400/20 flex items-center gap-2 gothic-title border border-yellow-200">
-                            Next Step <i class="fa-solid fa-arrow-right"></i>
+                        <button onclick="handleNextOrFinish(); playSfx('click');" id="next-btn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-white font-black text-xs sm:text-sm transition shadow-lg flex items-center gap-2 heading-font border border-amber-200">
+                            <span id="next-btn-text">Next Step</span> <i id="next-btn-icon" class="fa-solid fa-arrow-right"></i>
                         </button>
-                    </div>
-                </div>
-
-                <div id="completion-summary-panel" class="gothic-glass rounded-3xl p-6 sm:p-8 space-y-6 border border-purple-500/30">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-purple-500/30">
-                        <div>
-                            <h3 class="text-xl font-black text-white flex items-center gap-2 gothic-title">
-                                <i class="fa-solid fa-square-poll-vertical text-yellow-400"></i> Final Evaluation Summary
-                            </h3>
-                            <p class="text-xs text-purple-300/70 mt-1">Review finalized breakdown (Pass Mark: 42.5 / 50 Pts).</p>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <button onclick="submitToWebhook()" class="px-5 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs sm:text-sm transition shadow-lg shadow-purple-600/30 flex items-center gap-2 gothic-title border border-purple-400/40">
-                                <i class="fa-brands fa-discord"></i> Send to Discord Webhook
-                            </button>
-                            <button onclick="copySlashCommand(); playSfx('click');" class="px-5 py-3 rounded-xl bg-purple-950 hover:bg-purple-900 text-yellow-300 font-extrabold text-xs sm:text-sm border border-purple-500/40 transition flex items-center gap-2 gothic-title">
-                                <i class="fa-solid fa-copy"></i> Copy /training-results Command
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-purple-950/90 border border-purple-500/30 rounded-2xl p-5 space-y-4 shadow-xl">
-                        <div class="flex items-center gap-2 text-xs font-extrabold text-purple-300 uppercase tracking-wider gothic-title">
-                            <i class="fa-brands fa-discord text-yellow-400 text-base"></i> RURP Official Embed Preview
-                        </div>
-                        <div class="border-l-4 rounded-lg pl-4 py-2 space-y-3 bg-purple-900/40 border-rose-500" id="discord-embed-border">
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm font-extrabold text-white">RURP Staff Evaluation Log</span>
-                                <span id="embed-status-tag" class="text-xs font-extrabold px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-400">FAILED</span>
-                            </div>
-                            <div class="text-xs text-purple-200 space-y-1 code-font">
-                                <div><strong>Trainee:</strong> <span id="embed-trainee">-</span></div>
-                                <div><strong>Trainer:</strong> <span id="embed-trainer">-</span></div>
-                                <div><strong>Overall Score:</strong> <span id="embed-score">0 / 50</span></div>
-                            </div>
-                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2 border-t border-purple-800/50 text-xs">
-                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
-                                    <div class="text-[9px] text-purple-300/70 font-semibold">Commands</div>
-                                    <div id="embed-sec-1" class="font-extrabold text-white">0/10</div>
-                                </div>
-                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
-                                    <div class="text-[9px] text-purple-300/70 font-semibold">Questions</div>
-                                    <div id="embed-sec-2" class="font-extrabold text-white">0/10</div>
-                                </div>
-                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
-                                    <div class="text-[9px] text-purple-300/70 font-semibold">Meeting</div>
-                                    <div id="embed-sec-3" class="font-extrabold text-white">0/10</div>
-                                </div>
-                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
-                                    <div class="text-[9px] text-purple-300/70 font-semibold">Driving</div>
-                                    <div id="embed-sec-4" class="font-extrabold text-white">0/10</div>
-                                </div>
-                                <div class="bg-purple-950/80 p-2.5 rounded-xl border border-purple-800">
-                                    <div class="text-[9px] text-yellow-400 font-semibold">Pullover</div>
-                                    <div id="embed-sec-5" class="font-extrabold text-white">0/10</div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -353,24 +455,24 @@
 
         <!-- TAB 2: QUESTION BANK -->
         <div id="tab-bank" class="hidden space-y-6">
-            <div class="gothic-glass rounded-2xl p-6 flex items-center justify-between border border-purple-500/30">
+            <div class="hub-glass rounded-2xl p-6 flex items-center justify-between border border-emerald-500/30">
                 <div>
-                    <h2 class="text-xl font-black text-white gothic-title">RURP V1.2 Master Guide Bank</h2>
-                    <p class="text-xs text-yellow-400/70 mt-1">Official section breakdown and answers.</p>
+                    <h2 class="text-xl font-black text-white heading-font">RURP Guide V1.3 Master Bank</h2>
+                    <p class="text-xs text-amber-400/70 mt-1">Official holiday section breakdown and marking schemes.</p>
                 </div>
-                <span class="text-xs bg-yellow-400/20 border border-yellow-400/40 text-yellow-300 px-3 py-1.5 rounded-xl font-extrabold gothic-title">50 Total Points</span>
+                <span class="text-xs bg-amber-400/20 border border-amber-400/40 text-amber-300 px-3 py-1.5 rounded-xl font-extrabold heading-font">40 Total Points</span>
             </div>
             <div id="question-bank-render" class="space-y-4"></div>
         </div>
 
         <!-- TAB 3: HISTORY VAULT -->
         <div id="tab-history" class="hidden space-y-6">
-            <div class="gothic-glass rounded-2xl p-6 flex items-center justify-between border border-purple-500/30">
+            <div class="hub-glass rounded-2xl p-6 flex items-center justify-between border border-emerald-500/30">
                 <div>
-                    <h2 class="text-xl font-black text-white gothic-title">History Vault</h2>
-                    <p class="text-xs text-yellow-400/70 mt-1">All past training logs recorded locally.</p>
+                    <h2 class="text-xl font-black text-white heading-font">History Vault</h2>
+                    <p class="text-xs text-amber-400/70 mt-1">All past training logs recorded locally.</p>
                 </div>
-                <button onclick="clearHistory(); playSfx('click');" class="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/40 text-xs font-bold transition gothic-title">
+                <button onclick="clearHistory(); playSfx('click');" class="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/40 text-xs font-bold transition heading-font">
                     <i class="fa-solid fa-trash"></i> Clear Logs
                 </button>
             </div>
@@ -379,37 +481,37 @@
 
         <!-- TAB 4: ADMIN PANEL -->
         <div id="tab-admin" class="hidden space-y-6">
-            <div class="gothic-glass rounded-3xl p-8 space-y-6 border border-purple-500/30">
-                <div class="flex items-center justify-between border-b border-purple-500/30 pb-4">
+            <div class="hub-glass rounded-3xl p-8 space-y-6 border border-emerald-500/30">
+                <div class="flex items-center justify-between border-b border-emerald-500/30 pb-4">
                     <div>
-                        <h2 class="text-xl font-black text-white flex items-center gap-2 gothic-title">
-                            <i class="fa-solid fa-crown text-yellow-400"></i> Admin Panel
+                        <h2 class="text-xl font-black text-white flex items-center gap-2 heading-font">
+                            <i class="fa-solid fa-crown text-amber-400"></i> Admin Panel
                         </h2>
-                        <p class="text-xs text-yellow-400/70 mt-1">Monitor staff active counts and system status.</p>
+                        <p class="text-xs text-amber-400/70 mt-1">Monitor staff active counts and system status.</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="gothic-glass p-5 rounded-2xl border border-purple-500/30 space-y-1">
-                        <div class="text-xs text-yellow-400/70 font-bold uppercase gothic-title">Total Registered Staff</div>
+                    <div class="hub-glass p-5 rounded-2xl border border-emerald-500/30 space-y-1">
+                        <div class="text-xs text-amber-400/70 font-bold uppercase heading-font">Total Registered Staff</div>
                         <div id="admin-total-users" class="text-2xl font-black text-white code-font">0</div>
                     </div>
-                    <div class="gothic-glass p-5 rounded-2xl border border-purple-500/30 space-y-1">
-                        <div class="text-xs text-yellow-400/70 font-bold uppercase gothic-title">Total Sessions Logged</div>
+                    <div class="hub-glass p-5 rounded-2xl border border-emerald-500/30 space-y-1">
+                        <div class="text-xs text-amber-400/70 font-bold uppercase heading-font">Total Sessions Logged</div>
                         <div id="admin-total-trainings" class="text-2xl font-black text-white code-font">0</div>
                     </div>
-                    <div class="gothic-glass p-5 rounded-2xl border border-purple-500/30 space-y-1">
-                        <div class="text-xs text-yellow-400/70 font-bold uppercase gothic-title">System Status</div>
-                        <div class="text-2xl font-black text-emerald-400 code-font">Operational</div>
+                    <div class="hub-glass p-5 rounded-2xl border border-emerald-500/30 space-y-1">
+                        <div class="text-xs text-amber-400/70 font-bold uppercase heading-font">System Status</div>
+                        <div class="text-2xl font-black text-emerald-400 code-font">Operational (Xmas V1.3)</div>
                     </div>
                 </div>
 
                 <div class="space-y-3 pt-2">
-                    <h3 class="text-sm font-black text-yellow-400 uppercase tracking-wider gothic-title">Active Staff Accounts</h3>
+                    <h3 class="text-sm font-black text-amber-400 uppercase tracking-wider heading-font">Active Staff Accounts</h3>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs text-purple-200 border-collapse">
+                        <table class="w-full text-left text-xs text-emerald-200 border-collapse">
                             <thead>
-                                <tr class="bg-purple-950 text-yellow-400 border-b border-purple-500/30 gothic-title">
+                                <tr class="bg-emerald-950 text-amber-400 border-b border-emerald-500/30 heading-font">
                                     <th class="p-3">Discord Tag</th>
                                     <th class="p-3">Roblox Handle</th>
                                     <th class="p-3">Role</th>
@@ -426,14 +528,14 @@
 
         <!-- TAB 5: SETTINGS -->
         <div id="tab-settings" class="hidden space-y-6">
-            <div class="gothic-glass rounded-3xl p-8 max-w-xl mx-auto space-y-6 border border-purple-500/30">
-                <h2 class="text-xl font-black text-white gothic-title">Settings</h2>
-                <div class="gothic-card p-4 rounded-2xl flex items-center justify-between border border-purple-500/30">
+            <div class="hub-glass rounded-3xl p-8 max-w-xl mx-auto space-y-6 border border-emerald-500/30">
+                <h2 class="text-xl font-black text-white heading-font">Settings</h2>
+                <div class="hub-glass p-4 rounded-2xl flex items-center justify-between border border-emerald-500/30">
                     <div>
-                        <div class="text-sm font-bold text-white gothic-title" id="settings-username-display">-</div>
-                        <div class="text-xs text-yellow-400/70 code-font" id="settings-role-display">-</div>
+                        <div class="text-sm font-bold text-white heading-font" id="settings-username-display">-</div>
+                        <div class="text-xs text-amber-400/70 code-font" id="settings-role-display">-</div>
                     </div>
-                    <button onclick="handleLogout()" class="px-5 py-2.5 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/40 font-bold text-xs gothic-title">
+                    <button onclick="handleLogout()" class="px-5 py-2.5 rounded-xl bg-red-500/20 text-red-400 border border-red-500/40 font-bold text-xs heading-font">
                         Logout
                     </button>
                 </div>
@@ -442,27 +544,26 @@
 
     </main>
 
-    <!-- FOOTER WITH SIGNATURE -->
-    <footer class="border-t border-purple-500/30 gothic-glass py-5 text-center text-xs text-yellow-400/60 z-10 gothic-title flex flex-col sm:flex-row items-center justify-center gap-3">
-        <span>RURP Realistic Union RolePlay • Evaluation Suite V1.2</span>
-        <span class="text-yellow-300 font-bold tracking-wider">• Made by m4x_678</span>
+    <!-- FOOTER -->
+    <footer class="border-t border-emerald-500/30 hub-glass py-5 text-center text-xs text-amber-400/60 z-10 heading-font flex flex-col sm:flex-row items-center justify-center gap-3">
+        <span>RURP Realistic Union RolePlay • Christmas Staff Training Guide V1.3</span>
+        <span class="text-amber-300 font-bold tracking-wider">• Made by m4x_678</span>
     </footer>
 
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-purple-950 border border-yellow-400/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-xs sm:text-sm font-bold pointer-events-none gothic-title">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-emerald-950 border border-amber-400/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-xs sm:text-sm font-bold pointer-events-none heading-font">
+        <i id="toast-icon" class="fa-solid fa-snowflake text-amber-400 text-lg"></i>
         <span id="toast-msg">Action Completed</span>
     </div>
 
     <script>
-        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1564935972863479891/bIkFfdn8pqhyy6VjXLiBWE7XbODNE9QJRFbkYt2JAuBYX3dcchAjePHO-3CzoctouOVV";
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1569026111608721568/1r0bs8t7yN17yBrABR39K3JmOPkmCGy4xI3B1V-fRP4BjlWb3MeLR-w08funZx4sowL5";
 
         const DEFAULT_USERS = [
-            { discord: "Alex_Staff", roblox: "AlexRoblox", password: "password123", role: "Owner", activeSeconds: 340, trainingsCount: 2 },
-            { discord: "Jordan_Staff", roblox: "JordanRoblox", password: "password123", role: "Staff", activeSeconds: 180, trainingsCount: 1 }
+            { discord: "Alex_Staff", roblox: "AlexRoblox", password: "password123", role: "Owner", activeSeconds: 340, trainingsCount: 2 }
         ];
 
-        let users = JSON.parse(localStorage.getItem('rurp_gothic_users_db') || JSON.stringify(DEFAULT_USERS));
-        let currentUser = JSON.parse(localStorage.getItem('rurp_gothic_current_session') || 'null');
+        let users = JSON.parse(localStorage.getItem('rurp_xmas_users_db') || JSON.stringify(DEFAULT_USERS));
+        let currentUser = JSON.parse(localStorage.getItem('rurp_xmas_current_session') || 'null');
 
         const QUESTIONS = [
             { id: 1, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What is the purpose of the vehicle spawnadmin command?", purpose: "Command Check", marking: "Correct = 1.0 Pt", guide: "Spawns admin/emergency vehicles." },
@@ -471,9 +572,9 @@
             { id: 4, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "Which command would you use to change the time of day for roleplay purposes?", purpose: "Command Check", marking: "Correct (:time [hour]) = 1.0 Pt", guide: ":time command." },
             { id: 5, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command can be used to change the weather conditions in the server?", purpose: "Command Check", marking: "Correct (:weather [condition]) = 1.0 Pt", guide: ":weather command." },
             { id: 6, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "Which command allows you to teleport yourself to another player?", purpose: "Command Check", marking: "Correct (:tp [player]) = 1.0 Pt", guide: ":tp command." },
-            { id: 7, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command would you use to clear all spawned vehicles or objects?", purpose: "Command Check", marking: "Correct (:clean or :clear) = 1.0 Pt", guide: ":clean or :clear command." },
+            { id: 7, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command would you use to move a car blocking the road?", purpose: "Command Check", marking: "Correct = 1.0 Pt", guide: "Admin vehicle/object removal command." },
             { id: 8, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "Which command is used to reset or respawn a player during a scenario?", purpose: "Command Check", marking: "Correct (:respawn [player]) = 1.0 Pt", guide: ":respawn command." },
-            { id: 9, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command can you use to stop a player from moving if they are disrupting RP?", purpose: "Command Check", marking: "Correct (:freeze [player]) = 1.0 Pt", guide: ":freeze command." },
+            { id: 9, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command allows you to add a player back to the server after removing them?", purpose: "Command Check", marking: "Correct = 1.0 Pt", guide: "Unban/allow command." },
             { id: 10, sec: 1, secTitle: "Section 1 – Command Knowledge", max: 1, text: "What command lets regular players use admin commands without permission?", purpose: "Command Check", marking: "Trick Question: None = 1.0 Pt", guide: "No command allows unauthorized admin usage." },
 
             { id: 11, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is MCRP? Give its consequence and an example.", purpose: "Definition & Consequence", marking: "Full = 1 Pt", guide: "Missing Crash RP. Warning. Crashing and driving off." },
@@ -482,20 +583,21 @@
             { id: 14, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is VDM? Give its consequence and an example.", purpose: "Definition & Consequence", marking: "Full = 1 Pt", guide: "Vehicle Death Match. Warning/Kick. Intentionally running over players." },
             { id: 15, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What is Cuff Rushing? Give its consequence and an example.", purpose: "Definition & Consequence", marking: "Full = 1 Pt", guide: "Cuffing without RP setup. Warning." },
             { id: 16, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "A car is blocking the road, what are you going to do? Give an Example and a Consequence.", purpose: "Scenario Action", marking: "Full = 1 Pt", guide: "Parked on road. Warning." },
-            { id: 17, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "You see an admin breaking the rules, what are you going to do? Give a Consequence and an Example.", purpose: "Staff Integrity", marking: "Full = 1 Pt", guide: "Record proof & report to Director/Owner." },
+            { id: 17, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "You see an admin breaking the rules, what are you going to do? Give a Consequence and an Example.", purpose: "Staff Integrity", marking: "Full = 1 Pt", guide: "Record proof & create Staff Report Ticket." },
             { id: 18, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "What are you going to do if someone skips the border? Give a Consequence.", purpose: "Rule Infraction", marking: "Full = 1 Pt", guide: "Kick for border skipping & Fail RP." },
             { id: 19, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "How often should you broadcast as an admin?", purpose: "Announcement Frequency", marking: "Full = 1 Pt", guide: "Every 5-10 minutes." },
             { id: 20, sec: 2, secTitle: "Section 2 – Knowledge Questions", max: 1, text: "In what circumstance can you permanently ban someone?", purpose: "Zero Tolerance Rules", marking: "Full = 1 Pt (2/4 correct)", guide: "NSFW, Exploiting, Bypass Roblox Filter, Advertising." },
 
             { id: 21, sec: 3, secTitle: "Section 3 – Meeting Scenario", max: 10, text: "Host Meeting Scenario (@all broadcast, SPaG, Control & Professionalism)", purpose: "Scenario Control", marking: "SPaG = 1 Pt, Near Template = 1 Pt / Exact Template = 2 Pts, Control = 1 Pt, Professionalism = 1 Pt (Up to 10 Pts)", guide: "Trainee uses @all broadcast, maintains calm control when trainer spawns smoke/cones." },
-            { id: 22, sec: 4, secTitle: "Section 4 – Driving Assessment", max: 10, text: "Driving Skills (Perfect drive: 5 Pts, Blinkers: 1 Pt, Stopping: 2 Pts, Parking: 2 Pts)", purpose: "Driving Control", marking: "Perfect Drive = 5, Blinkers = 1, Stop = 2, Park = 2 (Total 10 Pts)", guide: "Follow road rules, signal turns, stop completely, park correctly." },
-            { id: 23, sec: 5, secTitle: "Section 5 – Pull Over Scenario", max: 10, text: "Pull Over Scenario (Pulling over trainer: 5 Pts, SPaG: 1 Pt, Admin recognition: 1 Pt, Correct consequences: 3 Pts)", purpose: "Traffic Enforcement", marking: "Pull Over = 5, SPaG = 1, Admin Awareness = 1, Consequences = 3 (Total 10 Pts)", guide: "Pull over trainer for drunk driving, wrong side, speeding, parking on road; issue correct tickets/warnings." }
+            { id: 22, sec: 4, secTitle: "Section 4 – Driving Assessment", max: 5, text: "Driving Skills (Perfect drive: 2 Pts, Blinkers: 1 Pt, Stopping: 1 Pt, Parking: 1 Pt)", purpose: "Driving Control", marking: "Perfect Drive = 2, Blinkers = 1, Stop = 1, Park = 1 (Total 5 Pts)", guide: "Follow road rules, signal turns, stop completely, park correctly." },
+            { id: 23, sec: 5, secTitle: "Section 5 – Pull Over Scenario", max: 5, text: "Pull Over Scenario (Pulling over trainer: 2 Pts, SPaG: 1 Pt, Admin awareness: 1 Pt, Consequences: 1 Pt)", purpose: "Traffic Enforcement", marking: "Pull Over = 2, SPaG = 1, Admin Awareness = 1, Consequences = 1 (Total 5 Pts)", guide: "Pull over trainer for drunk driving, wrong side, speeding, parking on road; issue correct consequences." }
         ];
 
         let currentStep = 0;
         let traineeName = "";
         let trainerName = "";
         let scores = {};
+        let manualPassState = null;
         let overallSeconds = 0;
         let overallTimerInterval = null;
 
@@ -528,10 +630,29 @@
         }
 
         window.onload = () => {
+            let progress = 0;
+            const bar = document.getElementById('load-bar');
+            const percentTxt = document.getElementById('load-percent');
+            const loader = document.getElementById('loading-screen');
+
+            const loadInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 12) + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadInterval);
+                    setTimeout(() => {
+                        loader.style.opacity = '0';
+                        setTimeout(() => loader.remove(), 700);
+                    }, 400);
+                }
+                bar.style.width = progress + '%';
+                percentTxt.innerText = progress + '%';
+            }, 50);
+
             checkAuthSession();
             renderQuestionBank();
             loadHistoryLogs();
-            initPurpleGoldBackground();
+            initBackgroundCanvas();
             initCursorEffect();
         };
 
@@ -571,9 +692,9 @@
 
             const newUser = { discord, roblox, password, role: "Staff", activeSeconds: 0, trainingsCount: 0 };
             users.push(newUser);
-            localStorage.setItem('rurp_gothic_users_db', JSON.stringify(users));
+            localStorage.setItem('rurp_xmas_users_db', JSON.stringify(users));
             currentUser = newUser;
-            localStorage.setItem('rurp_gothic_current_session', JSON.stringify(currentUser));
+            localStorage.setItem('rurp_xmas_current_session', JSON.stringify(currentUser));
             showToast(`Welcome ${discord}!`);
             checkAuthSession();
         }
@@ -586,7 +707,7 @@
             const found = users.find(u => u.discord.toLowerCase() === discord.toLowerCase() && u.password === password);
             if (found) {
                 currentUser = found;
-                localStorage.setItem('rurp_gothic_current_session', JSON.stringify(currentUser));
+                localStorage.setItem('rurp_xmas_current_session', JSON.stringify(currentUser));
                 showToast(`Welcome back, ${currentUser.discord}!`);
                 checkAuthSession();
             } else {
@@ -597,61 +718,37 @@
         function handleLogout() {
             playSfx('click');
             currentUser = null;
-            localStorage.removeItem('rurp_gothic_current_session');
+            localStorage.removeItem('rurp_xmas_current_session');
             location.reload();
         }
 
-        function loadAdminPanel() {
-            let history = JSON.parse(localStorage.getItem('rurp_gothic_history') || '[]');
-            document.getElementById('admin-total-users').innerText = users.length;
-            document.getElementById('admin-total-trainings').innerText = history.length;
-
-            const tbody = document.getElementById('admin-users-table');
-            if (!tbody) return;
-
-            tbody.innerHTML = users.map(u => `
-                <tr class="border-b border-purple-500/10 hover:bg-purple-900/30">
-                    <td class="p-3 font-bold text-white">${u.discord}</td>
-                    <td class="p-3 text-yellow-300/80">${u.roblox || '-'}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.role === 'Owner' ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/40' : 'bg-purple-800 text-purple-200'}">${u.role}</span></td>
-                    <td class="p-3 code-font text-yellow-300">${Math.floor((u.activeSeconds || 0) / 60)}m</td>
-                    <td class="p-3 code-font font-bold">${u.trainingsCount || 0}</td>
-                </tr>
-            `).join('');
-        }
-
-        function switchTab(tabId) {
-            playSfx('click');
-            ['eval', 'bank', 'history', 'admin', 'settings'].forEach(t => {
-                const el = document.getElementById(`tab-${t}`);
-                if (el) el.classList.add('hidden');
-                const btn = document.getElementById(`tab-btn-${t}`);
-                if (btn) btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold text-yellow-300/70 hover:text-white transition-all flex items-center gap-2 gothic-title";
-            });
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tabId}`).className = "px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-950 shadow-lg gothic-title";
-            if (tabId === 'admin') loadAdminPanel();
-        }
-
-        function startSession(e) {
+        function handleInitialSetup(e) {
             e.preventDefault();
             traineeName = document.getElementById('setup-trainee').value.trim();
             trainerName = document.getElementById('setup-trainer').value.trim();
-
             if(!traineeName || !trainerName) return;
 
+            document.getElementById('rules-modal').classList.remove('hidden');
+        }
+
+        function confirmRulesAndLaunch() {
+            document.getElementById('rules-modal').classList.add('hidden');
             scores = {};
             QUESTIONS.forEach(q => { scores[q.id] = 0; });
             currentStep = 0;
+            manualPassState = null;
             overallSeconds = 0;
 
             document.getElementById('display-trainee-name').innerText = traineeName;
             document.getElementById('display-trainer-name').innerText = trainerName;
             document.getElementById('embed-trainee').innerText = traineeName;
             document.getElementById('embed-trainer').innerText = trainerName;
+            document.getElementById('result-overlay-meta').innerText = `Trainer: ${trainerName} | Trainee: ${traineeName}`;
+            document.getElementById('custom-training-note').value = "";
 
             document.getElementById('setup-card').classList.add('hidden');
             document.getElementById('active-session').classList.remove('hidden');
+            document.getElementById('final-result-overlay').classList.add('hidden');
 
             if(overallTimerInterval) clearInterval(overallTimerInterval);
             overallTimerInterval = setInterval(() => {
@@ -662,7 +759,7 @@
             }, 1000);
 
             renderCurrentQuestion();
-            updateGlobalScores();
+            showToast("Holiday training session launched!");
         }
 
         function renderCurrentQuestion() {
@@ -679,6 +776,16 @@
             document.getElementById('q-answer-guide').innerHTML = `<strong>Purpose:</strong> ${q.purpose}<br><br><strong>Expected:</strong> ${q.guide}`;
             document.getElementById('q-marking-reason').innerText = q.marking;
 
+            const nextBtnText = document.getElementById('next-btn-text');
+            const nextBtnIcon = document.getElementById('next-btn-icon');
+            if (currentStep === QUESTIONS.length - 1) {
+                nextBtnText.innerText = "View Final Result";
+                nextBtnIcon.className = "fa-solid fa-gift";
+            } else {
+                nextBtnText.innerText = "Next Step";
+                nextBtnIcon.className = "fa-solid fa-arrow-right";
+            }
+
             const btnContainer = document.getElementById('scoring-buttons-container');
             btnContainer.innerHTML = '';
             const currentScore = scores[q.id] || 0;
@@ -686,7 +793,7 @@
             if(q.max === 1) {
                 const options = [
                     { label: 'Correct (+1.0 Pt)', score: 1, color: 'emerald' },
-                    { label: 'Incorrect (0.0 Pt)', score: 0, color: 'rose' }
+                    { label: 'Incorrect (0.0 Pt)', score: 0, color: 'red' }
                 ];
 
                 options.forEach(opt => {
@@ -694,8 +801,8 @@
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.onclick = () => { playSfx('score'); setScore(q.id, opt.score); };
-                    btn.className = `py-3.5 px-4 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 gothic-title ${
-                        active ? `bg-${opt.color}-500 text-purple-950 shadow-lg ring-2 ring-white scale-[1.02]` : `bg-purple-950/80 text-purple-200 border border-purple-500/30`
+                    btn.className = `py-3.5 px-4 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 heading-font ${
+                        active ? `bg-${opt.color}-600 text-white shadow-lg ring-2 ring-white scale-[1.02]` : `bg-emerald-950/80 text-emerald-200 border border-emerald-500/30`
                     }`;
                     btn.innerText = opt.label;
                     btnContainer.appendChild(btn);
@@ -706,8 +813,8 @@
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.onclick = () => { playSfx('score'); setScore(q.id, val); };
-                    btn.className = `py-3.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center gothic-title ${
-                        active ? `bg-yellow-400 text-purple-950 shadow-lg ring-2 ring-white scale-[1.02]` : `bg-purple-950/80 text-purple-200 border border-purple-500/30`
+                    btn.className = `py-3.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center heading-font ${
+                        active ? `bg-amber-400 text-emerald-950 shadow-lg ring-2 ring-white scale-[1.02]` : `bg-emerald-950/80 text-emerald-200 border border-emerald-500/30`
                     }`;
                     btn.innerText = `${val} Pts`;
                     btnContainer.appendChild(btn);
@@ -720,17 +827,59 @@
         function setScore(qId, val) {
             scores[qId] = val;
             renderCurrentQuestion();
-            updateGlobalScores();
         }
 
-        function nextQuestion() {
+        function handleNextOrFinish() {
             if(currentStep < QUESTIONS.length - 1) {
                 currentStep++;
                 renderCurrentQuestion();
             } else {
-                showToast("Evaluation complete! Review final scores.");
-                document.getElementById('completion-summary-panel').scrollIntoView({ behavior: 'smooth' });
+                triggerSuspenseSequence();
             }
+        }
+
+        function triggerSuspenseSequence() {
+            const suspenseScreen = document.getElementById('suspense-screen');
+            const suspenseBar = document.getElementById('suspense-bar');
+            const suspenseTimerCount = document.getElementById('suspense-timer-count');
+            const statusMsg = document.getElementById('suspense-status-msg');
+
+            suspenseScreen.classList.remove('hidden');
+            suspenseBar.style.width = '0%';
+            let secondsLeft = 20;
+            suspenseTimerCount.innerText = `${secondsLeft}s`;
+
+            const statusMessages = [
+                "Compiling holiday exam data...",
+                "Verifying section benchmarks against Guide V1.3...",
+                "Running final evaluation calculations...",
+                "Preparing festive result panel..."
+            ];
+
+            let msgIndex = 0;
+            const messageInterval = setInterval(() => {
+                msgIndex = (msgIndex + 1) % statusMessages.length;
+                statusMsg.innerText = statusMessages[msgIndex];
+            }, 5000);
+
+            let progressInterval = setInterval(() => {
+                secondsLeft--;
+                let elapsedPct = ((20 - secondsLeft) / 20) * 100;
+                suspenseBar.style.width = elapsedPct + '%';
+                suspenseTimerCount.innerText = `${secondsLeft}s`;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(progressInterval);
+                    clearInterval(messageInterval);
+                    suspenseScreen.classList.add('hidden');
+                    if(overallTimerInterval) clearInterval(overallTimerInterval);
+                    
+                    // Open the dedicated full-screen result overlay
+                    updateGlobalScores();
+                    document.getElementById('final-result-overlay').classList.remove('hidden');
+                    showToast("Suspense complete! Results panel opened.");
+                }
+            }, 1000);
         }
 
         function prevQuestion() {
@@ -751,25 +900,16 @@
             QUESTIONS.forEach(q => secTotals[q.sec] += (scores[q.id] || 0));
 
             const grandTotal = Object.values(secTotals).reduce((a, b) => a + b, 0);
-            document.getElementById('live-score').innerText = grandTotal.toFixed(1);
 
-            const isPass = grandTotal >= 42.5;
+            document.getElementById('summary-sec-1').innerText = `${secTotals[1]}/10`;
+            document.getElementById('summary-sec-2').innerText = `${secTotals[2]}/10`;
+            document.getElementById('summary-sec-3').innerText = `${secTotals[3]}/10`;
+            document.getElementById('summary-sec-4').innerText = `${secTotals[4]}/5`;
+            document.getElementById('summary-sec-5').innerText = `${secTotals[5]}/5`;
 
-            const badge = document.getElementById('status-badge');
-            if(isPass) {
-                badge.className = "px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-xs font-extrabold shadow-lg";
-                badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> PASS (${grandTotal.toFixed(1)}/50)`;
-            } else {
-                badge.className = "px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/40 text-rose-400 text-xs font-extrabold shadow-lg";
-                badge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> FAIL (${grandTotal.toFixed(1)}/50)`;
-            }
+            let isPass = manualPassState !== null ? manualPassState : (grandTotal >= 32.5);
 
-            document.getElementById('embed-score').innerText = `${grandTotal.toFixed(1)} / 50 Pts (${Math.round((grandTotal/50)*100)}%)`;
-            document.getElementById('embed-sec-1').innerText = `${secTotals[1]}/10`;
-            document.getElementById('embed-sec-2').innerText = `${secTotals[2]}/10`;
-            document.getElementById('embed-sec-3').innerText = `${secTotals[3]}/10`;
-            document.getElementById('embed-sec-4').innerText = `${secTotals[4]}/10`;
-            document.getElementById('embed-sec-5').innerText = `${secTotals[5]}/10`;
+            document.getElementById('embed-score').innerText = `${grandTotal.toFixed(1)} / 40 Pts (${Math.round((grandTotal/40)*100)}%)`;
 
             const embedBorder = document.getElementById('discord-embed-border');
             const embedTag = document.getElementById('embed-status-tag');
@@ -779,16 +919,26 @@
                 embedTag.innerText = "PASSED";
             } else {
                 embedBorder.style.borderColor = "#ef4444";
-                embedTag.className = "text-xs font-extrabold px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-400";
-                embedTag.innerText = "FAILED";
+                embedTag.className = "text-xs font-extrabold px-2.5 py-0.5 rounded bg-red-500/20 text-red-400";
+                embedTag.innerText = manualPassState === false ? "FAILED (MANUAL)" : "FAILED";
             }
+        }
+
+        function setManualDecision(state) {
+            playSfx('click');
+            if(state === 'pass') manualPassState = true;
+            else if(state === 'fail') manualPassState = false;
+            else if(state === 'skipped') manualPassState = false;
+            updateGlobalScores();
+            showToast(state === 'pass' ? "Manually marked as PASSED" : (state === 'skipped' ? "Marked as Skipped (Auto-Fail)" : "Manually marked as FAILED"));
         }
 
         async function submitToWebhook() {
             let secTotals = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
             QUESTIONS.forEach(q => secTotals[q.sec] += (scores[q.id] || 0));
             const grandTotal = Object.values(secTotals).reduce((a, b) => a + b, 0);
-            const isPass = grandTotal >= 42.5;
+            const isPass = manualPassState !== null ? manualPassState : (grandTotal >= 32.5);
+            const customNote = document.getElementById('custom-training-note').value.trim();
 
             const record = {
                 conductedBy: currentUser ? currentUser.discord : "Staff",
@@ -797,21 +947,28 @@
                 grandTotal,
                 isPass,
                 secTotals,
+                customNote,
                 date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
             };
 
+            let embedFields = [
+                { name: "Trainer", value: trainerName, inline: true },
+                { name: "Trainee", value: traineeName, inline: true },
+                { name: "Final Score", value: `${grandTotal.toFixed(1)} / 40 (${Math.round((grandTotal/40)*100)}%)`, inline: true },
+                { name: "Section Scores", value: `• Commands: ${secTotals[1]}/10\n• Questions: ${secTotals[2]}/10\n• Meeting: ${secTotals[3]}/10\n• Driving: ${secTotals[4]}/5\n• Pull Over: ${secTotals[5]}/5`, inline: false }
+            ];
+
+            if(customNote) {
+                embedFields.push({ name: "Training Note / Feedback", value: customNote, inline: false });
+            }
+
             const payload = {
-                username: "RURP Training Vault",
+                username: "RURP Xmas Training Vault V1.3",
                 embeds: [{
-                    title: isPass ? "Staff Training PASSED" : "Staff Training FAILED",
+                    title: isPass ? "🎄 Staff Training PASSED (Xmas V1.3)" : "❄️ Staff Training FAILED (Xmas V1.3)",
                     color: isPass ? 65280 : 16711680,
-                    fields: [
-                        { name: "Trainer", value: trainerName, inline: true },
-                        { name: "Trainee", value: traineeName, inline: true },
-                        { name: "Final Score", value: `${grandTotal.toFixed(1)} / 50 (${Math.round((grandTotal/50)*100)}%)`, inline: true },
-                        { name: "Section Scores", value: `• Commands: ${secTotals[1]}/10\n• Questions: ${secTotals[2]}/10\n• Meeting: ${secTotals[3]}/10\n• Driving: ${secTotals[4]}/10\n• Pullover: ${secTotals[5]}/10`, inline: false }
-                    ],
-                    footer: { text: "RURP Realistic Union RolePlay • Evaluation Suite V1.2 • Made by m4x_678" }
+                    fields: embedFields,
+                    footer: { text: "RURP Realistic Union RolePlay • Holiday Edition V1.3 • Made by m4x_678" }
                 }]
             };
 
@@ -819,7 +976,7 @@
                 await fetch(DISCORD_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 saveToHistory(record);
                 showToast("Webhook sent successfully!");
-                if(isPass) confetti({ particleCount: 140, spread: 85, origin: { y: 0.6 } });
+                if(isPass) confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
             } catch(err) {
                 saveToHistory(record);
                 showToast("Saved locally to History Vault!");
@@ -830,9 +987,18 @@
             let secTotals = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
             QUESTIONS.forEach(q => secTotals[q.sec] += (scores[q.id] || 0));
             const grandTotal = Object.values(secTotals).reduce((a, b) => a + b, 0);
-            const slashCmd = `/training-results notes:Evaluation_V1.2 overall:${grandTotal.toFixed(1)} meeting:${secTotals[3]} driving:${secTotals[4]+secTotals[5]} questions:${secTotals[2]} commands:${secTotals[1]} trainer:${trainerName} trainee:${traineeName}`;
+            const customNote = document.getElementById('custom-training-note').value.trim();
+            const slashCmd = `/training-results notes:${customNote ? customNote.replace(/\s+/g, '_') : 'Xmas_Evaluation_V1.3'} overall:${grandTotal.toFixed(1)} meeting:${secTotals[3]} driving:${secTotals[4]} pullover:${secTotals[5]} questions:${secTotals[2]} commands:${secTotals[1]} trainer:${trainerName} trainee:${traineeName}`;
             navigator.clipboard.writeText(slashCmd);
-            showToast("Copied slash command for Discord!");
+            showToast("Copied Xmas V1.3 slash command for Discord!");
+        }
+
+        function closeResultOverlayAndReset() {
+            document.getElementById('final-result-overlay').classList.add('hidden');
+            document.getElementById('active-session').classList.add('hidden');
+            document.getElementById('setup-card').classList.remove('hidden');
+            document.getElementById('setup-trainee').value = "";
+            document.getElementById('setup-trainer').value = "";
         }
 
         function renderQuestionBank() {
@@ -845,28 +1011,28 @@
                 if(secQuestions.length === 0) return;
 
                 const card = document.createElement('div');
-                card.className = "gothic-glass rounded-2xl p-6 space-y-4 border border-purple-500/30";
+                card.className = "hub-glass rounded-2xl p-6 space-y-4 border border-emerald-500/30";
                 
                 let qListHtml = secQuestions.map((q, idx) => `
-                    <div class="bg-purple-950/80 border border-purple-500/30 rounded-xl p-4 text-xs space-y-2">
-                        <div class="flex items-center justify-between font-extrabold text-white gothic-title">
+                    <div class="bg-emerald-950/80 border border-emerald-500/30 rounded-xl p-4 text-xs space-y-2">
+                        <div class="flex items-center justify-between font-extrabold text-white heading-font">
                             <span>Q${idx+1}. ${q.text}</span>
-                            <span class="text-yellow-400 code-font">${q.max} Pt${q.max > 1 ? 's' : ''}</span>
+                            <span class="text-amber-400 code-font">${q.max} Pt${q.max > 1 ? 's' : ''}</span>
                         </div>
-                        <div class="text-yellow-300 code-font"><strong>Guide:</strong> ${q.guide}</div>
-                        <div class="text-purple-200"><strong>Marking:</strong> ${q.marking}</div>
+                        <div class="text-amber-300 code-font"><strong>Guide:</strong> ${q.guide}</div>
+                        <div class="text-emerald-200"><strong>Marking:</strong> ${q.marking}</div>
                     </div>
                 `).join('');
 
-                card.innerHTML = `<h3 class="text-sm font-black text-yellow-400 uppercase gothic-title">${secQuestions[0].secTitle}</h3><div class="space-y-3">${qListHtml}</div>`;
+                card.innerHTML = `<h3 class="text-sm font-black text-amber-400 uppercase heading-font">${secQuestions[0].secTitle}</h3><div class="space-y-3">${qListHtml}</div>`;
                 container.appendChild(card);
             });
         }
 
         function saveToHistory(record) {
-            let history = JSON.parse(localStorage.getItem('rurp_gothic_history') || '[]');
+            let history = JSON.parse(localStorage.getItem('rurp_xmas_history') || '[]');
             history.unshift(record);
-            localStorage.setItem('rurp_gothic_history', JSON.stringify(history));
+            localStorage.setItem('rurp_xmas_history', JSON.stringify(history));
             loadHistoryLogs();
             loadAdminPanel();
         }
@@ -874,32 +1040,65 @@
         function loadHistoryLogs() {
             const container = document.getElementById('history-list-render');
             if (!container) return;
-            let history = JSON.parse(localStorage.getItem('rurp_gothic_history') || '[]');
+            let history = JSON.parse(localStorage.getItem('rurp_xmas_history') || '[]');
 
             if(history.length === 0) {
-                container.innerHTML = `<div class="gothic-glass p-8 rounded-2xl text-center text-yellow-400/60 text-sm gothic-title border border-purple-500/30">No recorded history found.</div>`;
+                container.innerHTML = `<div class="hub-glass p-8 rounded-2xl text-center text-amber-400/60 text-sm heading-font border border-emerald-500/30">No recorded holiday history found.</div>`;
                 return;
             }
 
             container.innerHTML = history.map(h => `
-                <div class="gothic-glass rounded-3xl p-6 space-y-4 border-l-4 ${h.isPass ? 'border-emerald-500' : 'border-rose-500'} border border-purple-500/30">
-                    <div class="flex items-center justify-between border-b border-purple-500/30 pb-4">
+                <div class="hub-glass rounded-3xl p-6 space-y-4 border-l-4 ${h.isPass ? 'border-emerald-500' : 'border-red-500'} border border-emerald-500/30">
+                    <div class="flex items-center justify-between border-b border-emerald-500/30 pb-4">
                         <div>
-                            <span class="text-base font-black text-white gothic-title">${h.traineeName}</span>
-                            <span class="text-xs px-2.5 py-0.5 rounded ${h.isPass ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'} font-extrabold gothic-title ml-2">${h.isPass ? 'PASSED' : 'FAILED'}</span>
-                            <p class="text-xs text-yellow-400/70 mt-0.5">Trainer: ${h.trainerName} • ${h.date}</p>
+                            <span class="text-base font-black text-white heading-font">${h.traineeName}</span>
+                            <span class="text-xs px-2.5 py-0.5 rounded ${h.isPass ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} font-extrabold heading-font ml-2">${h.isPass ? 'PASSED' : 'FAILED'}</span>
+                            <p class="text-xs text-amber-400/70 mt-0.5">Trainer: ${h.trainerName} • ${h.date}</p>
                         </div>
-                        <div class="text-2xl font-black text-white code-font">${h.grandTotal.toFixed(1)} / 50</div>
+                        <div class="text-2xl font-black text-white code-font">${h.grandTotal.toFixed(1)} / 40</div>
                     </div>
+                    ${h.customNote ? `<div class="text-xs text-emerald-200 bg-emerald-950/60 p-3 rounded-xl border border-emerald-500/20 code-font"><strong>Note:</strong> ${h.customNote}</div>` : ''}
                 </div>
             `).join('');
         }
 
+        function loadAdminPanel() {
+            let history = JSON.parse(localStorage.getItem('rurp_xmas_history') || '[]');
+            document.getElementById('admin-total-users').innerText = users.length;
+            document.getElementById('admin-total-trainings').innerText = history.length;
+
+            const tbody = document.getElementById('admin-users-table');
+            if (!tbody) return;
+
+            tbody.innerHTML = users.map(u => `
+                <tr class="border-b border-emerald-500/10 hover:bg-emerald-900/30">
+                    <td class="p-3 font-bold text-white">${u.discord}</td>
+                    <td class="p-3 text-amber-300/80">${u.roblox || '-'}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.role === 'Owner' ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : 'bg-emerald-800 text-emerald-200'}">${u.role}</span></td>
+                    <td class="p-3 code-font text-amber-300">${Math.floor((u.activeSeconds || 0) / 60)}m</td>
+                    <td class="p-3 code-font font-bold">${u.trainingsCount || 0}</td>
+                </tr>
+            `).join('');
+        }
+
+        function switchTab(tabId) {
+            playSfx('click');
+            ['eval', 'bank', 'history', 'admin', 'settings'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if (el) el.classList.add('hidden');
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (btn) btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold text-amber-300/70 hover:text-white transition-all flex items-center gap-2 heading-font";
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabId}`).className = "px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-red-600 to-amber-500 text-white shadow-lg heading-font";
+            if (tabId === 'admin') loadAdminPanel();
+        }
+
         function clearHistory() {
-            localStorage.removeItem('rurp_gothic_history');
+            localStorage.removeItem('rurp_xmas_history');
             loadHistoryLogs();
             loadAdminPanel();
-            showToast("History cleared!");
+            showToast("Holiday history cleared!");
         }
 
         function showToast(msg) {
@@ -909,37 +1108,40 @@
             setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
         }
 
-        function initPurpleGoldBackground() {
-            const canvas = document.getElementById('gothic-video-canvas');
+        function initBackgroundCanvas() {
+            const canvas = document.getElementById('bg-canvas');
             const ctx = canvas.getContext('2d');
             let width = canvas.width = window.innerWidth;
             let height = canvas.height = window.innerHeight;
 
-            let nodes = [
-                { x: width * 0.2, y: height * 0.3, radius: width * 0.4, color: 'rgba(91, 33, 182, 0.45)', vx: 0.4, vy: 0.3 },
-                { x: width * 0.8, y: height * 0.7, radius: width * 0.45, color: 'rgba(147, 51, 234, 0.35)', vx: -0.3, vy: -0.4 }
-            ];
+            let snowflakes = [];
+            for(let i=0; i<60; i++) {
+                snowflakes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 3 + 1,
+                    speedY: Math.random() * 0.8 + 0.3,
+                    speedX: (Math.random() - 0.5) * 0.5
+                });
+            }
 
-            function animateBackground() {
-                ctx.fillStyle = "#0b0714";
+            function animate() {
+                ctx.fillStyle = "#051510";
                 ctx.fillRect(0, 0, width, height);
 
-                nodes.forEach(n => {
-                    n.x += n.vx; n.y += n.vy;
-                    if(n.x < 0 || n.x > width) n.vx *= -1;
-                    if(n.y < 0 || n.y > height) n.vy *= -1;
-
-                    let grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.radius);
-                    grad.addColorStop(0, n.color);
-                    grad.addColorStop(1, 'transparent');
-                    ctx.fillStyle = grad;
+                ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                snowflakes.forEach(sf => {
+                    sf.y += sf.speedY;
+                    sf.x += sf.speedX;
+                    if(sf.y > height) { sf.y = 0; sf.x = Math.random() * width; }
                     ctx.beginPath();
-                    ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+                    ctx.arc(sf.x, sf.y, sf.radius, 0, Math.PI * 2);
                     ctx.fill();
                 });
-                requestAnimationFrame(animateBackground);
+
+                requestAnimationFrame(animate);
             }
-            animateBackground();
+            animate();
         }
 
         function initCursorEffect() {
@@ -955,7 +1157,7 @@
                     particles.push({
                         x: e.clientX, y: e.clientY,
                         vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2,
-                        size: Math.random() * 2.5 + 1, color: '#eab308', alpha: 1
+                        size: Math.random() * 2.5 + 1, color: '#facc15', alpha: 1
                     });
                 }
             });
